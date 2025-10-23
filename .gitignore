@@ -1,0 +1,32 @@
+# Build artifacts
+build/
+*.elf
+*.bin
+*.hex
+*.map
+*.o
+*.d
+
+# VS Code
+.vscode/.cmake
+.vscode/ipch
+.vscode/.browse.*
+.vscode/settings.json
+
+# STM32Cube
+*.launch
+*.project
+*.cproject
+
+# ESP-IDF
+sdkconfig
+sdkconfig.old
+build/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# System files
+.DS_Store
+Thumbs.db

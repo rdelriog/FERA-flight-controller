@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "STM32 (ST-Link, OpenOCD)",
+      "cwd": "${workspaceFolder}/firmware",
+      "executable": "${workspaceFolder}/firmware/build/fc_f730.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "device": "STM32F730",
+      "runToMain": true,
+      "configFiles": [
+        "interface/stlink.cfg",
+        "target/stm32f7x.cfg"
+      ],
+      "svdFile": "${workspaceFolder}/firmware/third_party/cmsis/STM32F7.svd"
+    }
+  ]
+}

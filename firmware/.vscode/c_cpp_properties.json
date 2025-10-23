@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "stm32",
+      "includePath": [
+        "${workspaceFolder}/firmware/include",
+        "${workspaceFolder}/firmware/third_party/cmsis",
+        "${workspaceFolder}/firmware/third_party/stm32_hal"
+      ],
+      "defines": [
+        "STM32F730xx",
+        "USE_HAL_DRIVER"
+      ],
+      "compilerPath": "arm-none-eabi-gcc",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-arm"
+    }
+  ]
+}
