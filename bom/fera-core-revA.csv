@@ -1,0 +1,63 @@
+References,Qty,Value,Footprint,Side,Notes
+C1 C2 C3 C4 C5 C8,6,100n,C_0402_1005Metric,bottom,
+C6 C7,2,2u2,C_0603_1608Metric,bottom,
+C9,1,1u,C_0402_1005Metric,bottom,
+C10,1,4u7,C_0603_1608Metric,bottom,
+C11 C12,2,10p,C_0402_1005Metric,top,
+C13 C14 C16 C19 C24 C28 C32,7,100n,C_0402_1005Metric,top,
+C15,1,10n,C_0402_1005Metric,top,
+C17 C18 C29,3,2u2,C_0402_1005Metric,top,
+C20,1,220u 35V,CP_Elec_6.3x7.7,bottom,
+C21,1,10u 50V,C_1206_3216Metric,top,
+C22 C23 C34,3,22u 16V,C_1210_3225Metric,bottom,
+C25,1,1u,C_0402_1005Metric,top,
+C26,1,10u,C_0805_2012Metric,bottom,
+C27,1,22u,C_0805_2012Metric,top,
+C30,1,10u 50V,C_0805_2012Metric,bottom,
+C31,1,220u 10V,CP_Elec_6.3x7.7,bottom,
+C33,1,1u 25V,C_0603_1608Metric,top,
+C35,1,6p8,C_0402_1005Metric,bottom,
+D1,1,1 A Schottky,D_SOD-123,top,USB into the system rail. Pad 1 = cathode.
+D2,1,LED R,LED_0603_1608Metric,top,"Pad 1 = cathode, sunk by the MCU."
+D3,1,LED G,LED_0603_1608Metric,top,"Pad 1 = cathode, sunk by the MCU."
+D4,1,LED B,LED_0603_1608Metric,top,"Pad 1 = cathode, sunk by the MCU."
+D5,1,SMBJ18A,D_SMB,bottom,Clamps connector and ESC spikes on a 4S pack (16.8 V full). Pad 1 = cathode.
+D6,1,SS34,D_SMA,top,5 V buck into the system rail. Pad 1 = cathode.
+D7,1,SMAJ5.0A,D_SMA,bottom,Clamps the 5 V port rail. Pad 1 = cathode.
+FB1,1,600R@100MHz,L_0603_1608Metric,bottom,
+J1,1,PWR FRONT,AMASS_XT30PW-F_1x02_P2.50mm_Horizontal,top,"XT30PW-F: 15 A continuous, 30 A momentary, 0.8 mOhm (Amass spec V1.2). Pad 1 = minus, pad 2 = plus. Placeholder until the Phase 1 connector tests."
+J2,1,PWR RIGHT,AMASS_XT30PW-F_1x02_P2.50mm_Horizontal,top,"XT30PW-F: 15 A continuous, 30 A momentary, 0.8 mOhm (Amass spec V1.2). Pad 1 = minus, pad 2 = plus. Placeholder until the Phase 1 connector tests."
+J3,1,PWR BACK,AMASS_XT30PW-F_1x02_P2.50mm_Horizontal,top,"XT30PW-F: 15 A continuous, 30 A momentary, 0.8 mOhm (Amass spec V1.2). Pad 1 = minus, pad 2 = plus. Placeholder until the Phase 1 connector tests."
+J4,1,PWR LEFT,AMASS_XT30PW-F_1x02_P2.50mm_Horizontal,top,"XT30PW-F: 15 A continuous, 30 A momentary, 0.8 mOhm (Amass spec V1.2). Pad 1 = minus, pad 2 = plus. Placeholder until the Phase 1 connector tests."
+J5,1,SIG FRONT,PinHeader_2x04_P1.27mm_Horizontal,top,"Placeholder for the 8-way pogo block. Pin order here is chosen for routing (plane nets on the outer row), not the logical order in docs/port-spec.md."
+J6,1,SIG RIGHT,PinHeader_2x04_P1.27mm_Horizontal,top,"Placeholder for the 8-way pogo block. Pin order here is chosen for routing (plane nets on the outer row), not the logical order in docs/port-spec.md."
+J7,1,SIG BACK,PinHeader_2x04_P1.27mm_Horizontal,top,"Placeholder for the 8-way pogo block. Pin order here is chosen for routing (plane nets on the outer row), not the logical order in docs/port-spec.md."
+J8,1,SIG LEFT,PinHeader_2x04_P1.27mm_Horizontal,top,"Placeholder for the 8-way pogo block. Pin order here is chosen for routing (plane nets on the outer row), not the logical order in docs/port-spec.md."
+J11,1,microSD,microSD_HC_Hirose_DM3AT-SF-PEJM5,top,
+J12,1,USB-C,USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal,top,
+J14,1,LATCH,JST_GH_BM06B-GHS-TBT_1x06-1MP_P1.25mm_Vertical,top,
+J15,1,GPS,JST_GH_BM06B-GHS-TBT_1x06-1MP_P1.25mm_Vertical,top,
+J16,1,TELEM1,JST_GH_BM06B-GHS-TBT_1x06-1MP_P1.25mm_Vertical,top,
+J17,1,RC,JST_GH_BM04B-GHS-TBT_1x04-1MP_P1.25mm_Vertical,top,
+L1,1,10u 5A,L_Bourns_SRP7028A_7.3x6.6mm,top,Saturation current must be at least 5.1 A (LMR33630 high-side limit); confirm the part.
+L2,1,2u2 Isat>3A,L_Coilcraft_XAL4020-XXX,top,XAL4020-222 class: saturation above the 3 A switch limit.
+R1 R2 R3 R13 R23 R24,6,10k,R_0402_1005Metric,top,
+R4 R5 R17 R18 R19 R20 R21 R22,8,2k2,R_0402_1005Metric,top,
+R6,1,0R0002 2512,R_2512_Kelvin,top,"0.2 mOhm metal-strip shunt, 4 W or more: 0.7 W at 60 A, 2.9 W at 120 A. PX4: INA226_SHUNT = 0.0002."
+R7,1,100k,R_0402_1005Metric,top,
+R8,1,24k9,R_0402_1005Metric,top,
+R9,1,453k,R_0402_1005Metric,bottom,
+R10,1,100k,R_0402_1005Metric,bottom,
+R11 R12,2,5k1,R_0402_1005Metric,top,
+R14,1,680R,R_0402_1005Metric,top,
+R15 R16,2,330R,R_0402_1005Metric,top,
+SW1,1,SAFETY,SW_SPST_B3U-1000P,top,
+U1,1,STM32H743VIT6,LQFP-100_14x14mm_P0.5mm,top,
+U2,1,ICM-42688-P,LGA-14_3x2.5mm_P0.5mm_LayoutBorder3x4y,top,"Pin-out per TDK DS-000347 table 9. Pins 2, 3, 10, 11 are reserved: left open."
+U3,1,DPS368,Bosch_LGA-8_2x2.5mm_P0.65mm_ClockwisePinNumbering,top,DPS310 is discontinued; DPS368 is the pin- and register-compatible successor. I2C address 0x76. Check the land pattern against the Infineon drawing.
+U4,1,INA226,MSOP-10_3x3mm_P0.5mm,top,A0 = A1 = GND: I2C address 0x40 (start the PX4 ina226 driver with -a 0x40).
+U5,1,LMR33630ADDA,HSOP-8-1EP_3.9x4.9mm_P1.27mm_EP2.41x3.1mm,top,
+U6,1,TLV62569DBV,SOT-23-5,top,
+U7,1,LP5907MFX-3.3,SOT-23-5,top,
+U8,1,USBLC6-2SC6,SOT-23-6,top,D- enters on pin 1 and leaves on pin 6; D+ enters on 3 and leaves on 4.
+Y1,1,16MHz CL 8pF,Crystal_SMD_3225-4Pin_3.2x2.5mm,top,"Load capacitance 8 pF (10 pF capacitors + about 3 pF stray), ESR 80 ohm or less."

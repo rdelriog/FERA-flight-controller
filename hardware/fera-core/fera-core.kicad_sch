@@ -1,0 +1,20 @@
+(kicad_sch
+	(version 20231120)
+	(generator "fera-gen")
+	(generator_version "8.0")
+	(uuid "636fca46-dd7c-5065-9c18-fffd74082a60")
+	(paper "A4")
+	(title_block (title "FERA Core - Overview") (date "2026-11-15") (rev "A (preliminary)") (company "The Modular Drone Co") (comment 1 "Generated from gen/design.py by gen/make_schematic.py - edit design.py, not this file"))
+	(lib_symbols
+
+	)
+	(sheet (at 30 72) (size 70 22) (fields_autoplaced yes) (stroke (width 0.1524) (type solid)) (fill (color 255 255 225 1.0)) (uuid "fcd81ff2-d8ed-5651-802e-dd16fab1ca7a") (property "Sheetname" "MCU, clock, debug, status" (at 30 71.2 0) (effects (font (size 1.6 1.6)) (justify left bottom))) (property "Sheetfile" "mcu.kicad_sch" (at 30 94.8 0) (effects (font (size 1.27 1.27)) (justify left top))) (instances (project "fera-core" (path "/636fca46-dd7c-5065-9c18-fffd74082a60" (page "2")))))
+	(sheet (at 112 72) (size 70 22) (fields_autoplaced yes) (stroke (width 0.1524) (type solid)) (fill (color 255 255 225 1.0)) (uuid "cae7e249-8bfa-5efb-9888-29b195b42dd4") (property "Sheetname" "Sensors and storage" (at 112 71.2 0) (effects (font (size 1.6 1.6)) (justify left bottom))) (property "Sheetfile" "sensors.kicad_sch" (at 112 94.8 0) (effects (font (size 1.27 1.27)) (justify left top))) (instances (project "fera-core" (path "/636fca46-dd7c-5065-9c18-fffd74082a60" (page "3")))))
+	(sheet (at 194 72) (size 70 22) (fields_autoplaced yes) (stroke (width 0.1524) (type solid)) (fill (color 255 255 225 1.0)) (uuid "b72ec97b-ec7e-5d31-919f-3861e47abc31") (property "Sheetname" "Battery input and regulators" (at 194 71.2 0) (effects (font (size 1.6 1.6)) (justify left bottom))) (property "Sheetfile" "power.kicad_sch" (at 194 94.8 0) (effects (font (size 1.27 1.27)) (justify left top))) (instances (project "fera-core" (path "/636fca46-dd7c-5065-9c18-fffd74082a60" (page "4")))))
+	(sheet (at 30 114) (size 70 22) (fields_autoplaced yes) (stroke (width 0.1524) (type solid)) (fill (color 255 255 225 1.0)) (uuid "07ad7378-6345-571d-9e01-c40afbeb80d2") (property "Sheetname" "USB, debug and external connectors" (at 30 113.2 0) (effects (font (size 1.6 1.6)) (justify left bottom))) (property "Sheetfile" "io.kicad_sch" (at 30 136.8 0) (effects (font (size 1.27 1.27)) (justify left top))) (instances (project "fera-core" (path "/636fca46-dd7c-5065-9c18-fffd74082a60" (page "5")))))
+	(sheet (at 112 114) (size 70 22) (fields_autoplaced yes) (stroke (width 0.1524) (type solid)) (fill (color 255 255 225 1.0)) (uuid "52055069-ca0a-576a-a727-d2544fc6aa83") (property "Sheetname" "FERA ports" (at 112 113.2 0) (effects (font (size 1.6 1.6)) (justify left bottom))) (property "Sheetfile" "ports.kicad_sch" (at 112 136.8 0) (effects (font (size 1.27 1.27)) (justify left top))) (instances (project "fera-core" (path "/636fca46-dd7c-5065-9c18-fffd74082a60" (page "6")))))
+	(text "FERA Core rev A" (exclude_from_sim no) (at 30 20 0) (effects (font (size 6 6)) (justify left top)) (uuid "6e97eafe-b105-5751-87eb-e89e7b1175a6"))
+	(text "Flight controller and power distribution board of the FERA modular vehicle hub.\nSTM32H743 + ICM-42688-P + DPS368, 4S battery input with current sense, four identical module ports.\nEach box below is one page. Nets are joined by name: every pin carries a label or a power symbol." (exclude_from_sim no) (at 30 34 0) (effects (font (size 2.2 2.2)) (justify left top)) (uuid "76da7e94-bb42-5019-9605-462800b116cf"))
+	(text "Generated from hardware/fera-core/gen/design.py, the same file the\nboard is built from, and checked against it (gen/make_schematic.py --check).\nFootprints on the board carry the UUIDs of these symbols, so\n'Update PCB from Schematic' matches them directly." (exclude_from_sim no) (at 30 158 0) (effects (font (size 1.8 1.8)) (justify left top)) (uuid "f6be4be9-2e1e-50ed-840d-7cd34b69035f"))
+	(sheet_instances (path "/" (page "1")) (path "/fcd81ff2-d8ed-5651-802e-dd16fab1ca7a" (page "2")) (path "/cae7e249-8bfa-5efb-9888-29b195b42dd4" (page "3")) (path "/b72ec97b-ec7e-5d31-919f-3861e47abc31" (page "4")) (path "/07ad7378-6345-571d-9e01-c40afbeb80d2" (page "5")) (path "/52055069-ca0a-576a-a727-d2544fc6aa83" (page "6")))
+)

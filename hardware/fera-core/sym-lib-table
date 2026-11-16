@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "fera")(type "KiCad")(uri "${KIPRJMOD}/fera.kicad_sym")(options "")(descr "FERA Core project symbols"))
+)

@@ -1,0 +1,33 @@
+Block,Function,Part,Manufacturer,MPN,Package,Qty,Notes,Status
+MCU,Flight controller MCU,STM32H743VIT6,STMicroelectronics,STM32H743VIT6,LQFP-100,1,"2 MB flash, 480 MHz; same MCU family as Pixhawk FMUv6C",selected
+MCU,HSE crystal 16 MHz,16 MHz 10 ppm,Any,TBD,3225,1,Match load caps to crystal CL,to-source
+MCU,Decoupling / VCAP,"100 nF x12, 2.2 uF x2 (VCAP), 4.7 uF x2, 1 uF (VDDA)",Any,TBD,0402/0603,1,Per ST AN4938 hardware guide,to-source
+MCU,SWD debug header,Tag-Connect TC2030 footprint or 1.27 mm 2x5,Any,TBD,-,1,No part cost with TC2030-NL,to-decide
+Sensors,Primary IMU,ICM-42688-P,TDK InvenSense,ICM-42688-P,LGA-14 2.5x3,1,SPI; PX4 driver exists,selected
+Sensors,Secondary IMU (optional),BMI270,Bosch,BMI270,LGA-14 2.5x3,1,SPI; redundancy; DNP on rev A if cost matters,optional
+Sensors,Barometer,DPS368,Infineon,DPS368XTSA1,LGA-8 2x2.5,1,"I2C 0x76; DPS310 is discontinued, DPS368 is its pin- and register-compatible successor (PX4 dps310 driver); confirm MPN",selected
+Sensors,External GPS + compass,M10 GNSS + IST8310 module,Holybro / Matek,M10 GPS (e.g. Holybro M10 or Matek M10Q-5883),module,1,JST-GH 6-pin UART + I2C; keeps mag away from power wiring,to-source
+Storage,microSD socket,Push-push microSD,Any,TBD,SMD,1,SDMMC 4-bit; PX4 logs and params,to-source
+Storage,FRAM (optional),FM25V02A,Infineon,FM25V02A-G,SOIC-8,1,SPI parameter storage as on Pixhawk; optional if params on SD,optional
+Power,Battery input,XT60PW-M,Amass,XT60PW-M,TH right-angle,1,Footprint already in hardware/legacy/mark1-kicad/XT60PW-M,selected
+Power,Voltage + current monitor,INA226,Texas Instruments,INA226AIDGSR,VSSOP-10,1,I2C; PX4 ina226 driver; with shunt below,selected
+Power,Current shunt,0.2 mOhm 4 W or more,Any,TBD,2512,1,"Metal strip, on the fera:R_2512_Kelvin footprint (separate sense pads); 0.7 W at 60 A, 2.9 W at 120 A; INA226_SHUNT = 0.0002",to-source
+Power,5 V buck 3 A+,TPS54360B or AP63356,TI / Diodes Inc.,TBD,-,1,"Input up to 6S for headroom; servo rail 5.0-5.3 V, size for 4 A peak",to-decide
+Power,3V3 regulator (digital),AP63203 or LDO from 5 V,Diodes Inc.,TBD,-,1,Low-noise LDO for sensors rail recommended,to-decide
+Power,3V3 sensors LDO,LP5907-3.3,Texas Instruments,LP5907MFX-3.3,SOT-23-5,1,Separate quiet rail for IMU/baro,selected
+Power,Input protection,SMBJ18A TVS,Any,SMBJ18A,SMB,1,"On rev A (D5). Reverse-polarity protection is not on rev A",selected
+Power,Bulk capacitor,470-1000 uF 35 V low-ESR,Any,TBD,radial,1,At the XT60; ESC bulk caps live in the modules,to-source
+USB,USB-C receptacle,USB 2.0 Type-C 16-pin,Any,TBD,SMD,1,"5.1 k on CC1 and CC2 (missing on Mark I)",to-source
+USB,USB ESD protection,USBLC6-2SC6,STMicroelectronics,USBLC6-2SC6,SOT-23-6,1,,selected
+Port,Port power connector (x4 hub side),XT60PW-F or MR30PW,Amass,TBD-P1,TH,4,Chosen after Phase 1 coupon tests (docs/port-spec.md section 7),tbd-p1
+Port,Port signal contact (x4 hub side),8-pos pogo pin block or floating BtB,Mill-Max / Any,TBD-P1,-,4,>=1000 cycles; chosen after Phase 1 tests,tbd-p1
+Port,Port ESD / series protection,"TVS array + 100R series per signal",Any,TBD,-,4,On S1-S3 / ID / TELEM,to-source
+Port,Latch sense,Micro-switch or hall sensor (DRV5032),TI / Any,TBD-P1,-,4,One per port,tbd-p1
+Port,1-Wire pull-up,2.2 k,Any,TBD,0402,4,One bus per port,to-source
+Radio,RC receiver,ExpressLRS 2.4 GHz nano receiver,RadioMaster / BetaFPV / Happymodel,ELRS nano RX,module,1,CRSF on a UART,to-source
+Radio,Wi-Fi telemetry bridge,ESP32-C3-MINI-1,Espressif,ESP32-C3-MINI-1-N4,module,1,MAVLink over Wi-Fi on TELEM1; firmware in firmware/esp32-bridge,selected
+UI,RGB status LED,Any RGB LED + driver or NCP5623,Any,TBD,-,1,PX4 status LED,to-source
+UI,Buzzer,Passive piezo 5 V,Any,TBD,-,1,PX4 tunes,to-source
+UI,Safety / arm button,Tactile switch with LED,Any,TBD,-,1,,to-source
+Module,ID EEPROM (per module),DS28E07,Analog Devices (Maxim),DS28E07+,TO-92 / TSOC-6,1 per module,1-Wire 1 kbit with unique ROM ID,selected
+Module,Module ID PCB (per module),hardware/module-id,FERA,-,PCB,1 per module,"Carries EEPROM, signal pads, connector",to-design

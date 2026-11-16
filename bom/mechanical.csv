@@ -1,0 +1,50 @@
+Kit,Item,Spec,Qty,Notes,Status
+Hub,Hub base (printed),cad: hub_base,1,PETG or ASA; 4 walls; 40% gyroid,cad
+Hub,Hub lid (printed),cad: hub_lid,1,Gasketed variant for boat mode later,cad
+Hub,Latch pin,Steel dowel pin 4 mm x 30 mm,4,One per port,to-source
+Hub,Latch spring,Compression spring ~5 mm OD x 15 mm,4,Rate chosen in Phase 1 tests,tbd-p1
+Hub,Heat-set inserts,M3 x 5.7 mm brass,16,Lid screws + secondary retention,to-source
+Hub,Screws,M3 x 8 / M3 x 12 socket head,16,,to-source
+Hub,Thumb-screws,M3 captive thumb-screw,4,Secondary retention on flight modules,to-source
+Hub,Battery,4S LiPo 1500-2200 mAh XT60,1,"1500 mAh for quad; 2200 mAh for plane/rover. Lid is laid out for packs up to 110 x 40 x 40 mm",to-source
+Hub,Battery strap,20 x 250 mm hook-and-loop,2,"Through the four loops on the lid; add an anti-slip pad under the pack",to-source
+Hub,Dev flight controller (Phase 1 only),PX4-supported H743 board (e.g. Pixhawk 6C Mini),1,Replaced by FERA Core PCB in Phase 3,to-source
+Quad arm,Carbon tube,16 mm OD x 14 mm ID x 125 mm,4,Cut from 500 mm stock,to-source
+Quad arm,Port plug (printed),cad: port_plug,4,PA-CF or PETG; bonded + pinned to tube,cad
+Quad arm,Motor mount (printed),cad: motor_mount,4,16 x 16 mm M3 pattern (2207 motors),cad
+Quad arm,Motor,2207 1700-1950 KV,4,5-inch on 4S,to-source
+Quad arm,ESC,35 A single ESC (AM32 or BLHeli_32) with telemetry,4,One per arm inside/along the tube,to-source
+Quad arm,Propeller,5 inch tri-blade (e.g. 5x4.3x3),4,2 CW + 2 CCW,to-source
+Quad arm,Module ID PCB,hardware/module-id,4,,to-design
+Quad arm,Tube pin,M3 x 20 screw + nyloc nut,8,Pins plug and motor mount to tube,to-source
+Plane,Carbon tube,16 mm OD x 14 mm ID: 60 mm nose + 2 x 450 mm spars + 400 mm boom,4,Lengths as in cad/build.py (976 mm span),to-source
+Plane,Port plug (printed),cad: port_plug,4,,cad
+Plane,Nose motor mount (printed),cad: nose_motor_mount,1,2207-class motor on 16 x 16 mm M3; tractor,cad
+Plane,Wing rib (printed),cad: wing_rib,10,NACA 4412 at 200 mm chord; 5 per half,cad
+Plane,Servo rib (printed),cad: wing_servo_rib,2,One per half; 9 g servo,cad
+Plane,Tail mount (printed),cad: tail_mount,1,Clamps flat 3 mm stabiliser and fin,cad
+Plane,Anti-rotation rod,6 mm carbon rod x 430 mm,2,Through the rear hole of the ribs,to-source
+Plane,Wing covering and control surfaces,Film or foam skin; ailerons; 3 mm sheet stabiliser + fin,1,Not designed yet,to-design
+Plane,Motor + ESC + prop,2207/2306 motor + 35 A ESC + 7-8 inch prop,1,,to-source
+Plane,Servos,9 g metal-gear digital,4,2 aileron + elevator + rudder,to-source
+Rover,Carbon tube,16 mm OD x 14 mm ID x 85 mm,4,Same length as the quad arms,to-source
+Rover,Port plug (printed),cad: port_plug,4,,cad
+Rover,Gear motor mount (printed),cad: gearmotor_mount,2,LEFT and RIGHT ports,cad
+Rover,Wheel (printed),cad: wheel,2,80 mm; add a rubber band or TPU tyre,cad
+Rover,Skid (printed),cad: skid,2,FRONT and BACK ports,cad
+Rover,Gear motor,25 mm gear motor (25GA-370 style) 6-12 V; 4 mm D shaft,2,Plus a brushed ESC or driver each,to-source
+Crawler,Carbon tube,16 mm OD x 14 mm ID x 60 mm,2,,to-source
+Crawler,Port plug (printed),cad: port_plug,2,Cap the FRONT and BACK ports,cad
+Crawler,Track frame (printed),cad: track_frame,2,,cad
+Crawler,Sprocket + idler (printed),cad: track_sprocket + track_idler,2,One of each per side,cad
+Crawler,Track link (printed),cad: track_link,54,27 per side; hinge pins are 1.75 mm filament,cad
+Crawler,Gear motor,25 mm gear motor (25GA-370 style),2,Plus a brushed ESC or driver each,to-source
+Crawler,Idler axle,M4 x 40 bolt + nyloc nut,2,,to-source
+Boat,Carbon tube,16 mm OD x 14 mm ID x 120 mm,2,,to-source
+Boat,Port plug (printed),cad: port_plug,2,Cap the FRONT and BACK ports,cad
+Boat,Float saddle (printed),cad: float_saddle,2,,cad
+Boat,Thruster mount (printed),cad: thruster_mount,2,Air propeller; motor axis fore-aft,cad
+Boat,Float,65 mm closed-cell foam cylinder x 320 mm or longer,2,Two 320 mm floats displace 2.1 kg,to-source
+Boat,Motor + ESC + prop,2207 motor + 35 A ESC + 5 inch prop,2,The quad's parts; one tractor and one pusher prop,to-source
+Boat,Sealed hub lid,Gasketed lid variant,1,Not designed: the hub is not waterproof,to-design
+All,Blanking cap,cad: port_cap + module ID PCB,2,Closes unused ports,cad

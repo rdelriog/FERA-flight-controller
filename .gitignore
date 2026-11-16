@@ -30,3 +30,31 @@ __pycache__/
 # System files
 .DS_Store
 Thumbs.db
+
+# FERA monorepo
+cad/.venv/
+cad/out/
+node_modules/
+dist/
+app/src-tauri/target/
+
+# KiCad
+*-backups/
+fp-info-cache
+*.kicad_prl
+_autosave-*
+*.lck
+
+# FERA Core generator scratch files
+hardware/fera-core/gen/pads.json
+hardware/fera-core/gen/route_result.json
+hardware/fera-core/gen/route.log
+hardware/fera-core/gen/drc.json
+hardware/fera-core/gen/drc_summary.txt
+hardware/fera-core/gen/debug_*.png
+hardware/fera-core/gen/__pycache__/
+hardware/fera-core/gen/copper.json
+hardware/fera-core/gen/schematic.net
+hardware/fera-core/gen/erc.json
+hardware/fera-core/gen/parity.json
+*.kicad_sch-bak

@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "fera")(type "KiCad")(uri "${KIPRJMOD}/fera.pretty")(options "")(descr "FERA Core project footprints"))
+)

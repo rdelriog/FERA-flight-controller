@@ -1,0 +1,41 @@
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --text: #16202c;
+  --muted: #5a6675;
+  --line: #d5dae1;
+  --chip: #e9edf2;
+  --accent: #1f5fd0;
+  --good: #1a7f4b;
+  --warn: #b26a00;
+  --bad: #c23a2b;
+
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #11161c;
+    --surface: #1a2129;
+    --text: #e8edf2;
+    --muted: #9aa7b5;
+    --line: #313b47;
+    --chip: #26303b;
+    --accent: #3d7de8;
+    --good: #35a56b;
+    --warn: #d9952b;
+    --bad: #e0604f;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+}
