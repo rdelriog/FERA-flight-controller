@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from build123d import Box, Compound, Pos, export_step, export_stl  # noqa: E402
 
-from fera import hub, modules, port  # noqa: E402
+from fera import hub, latch, modules, port  # noqa: E402
 
 OUT = Path(__file__).parent / "out"
 
@@ -137,7 +137,7 @@ def other_modes(base, lid):
           f"ribbed area {2 * (stations[-1] - stations[0]) * m.WING_CHORD / 1e4:.1f} dm2")
 
     # rover: gear motor and wheel left and right, skids front and back
-    items, x_end = arm(modules.QUAD_ARM_TUBE_L)
+    items, x_end = arm(85.0)
     solids = [base, lid]
     solids += on_ports(["LEFT", "RIGHT"], items + [
         Pos(x_end, 0, 0) * parts["gearmotor_mount"],
@@ -165,11 +165,78 @@ def other_modes(base, lid):
     solids = [base, lid] + on_ports(["LEFT", "RIGHT"], items + [
         Pos(x_end - 45, 0, 0) * parts["float_saddle"], Pos(x_end, 0, 0) * parts["thruster_mount"], foam])
     finish("boat", solids)
-    prop_inner = hub.ACROSS_FLATS / 2 + x_end - modules.SLEEVE_L / 2 - modules.PROP_D / 2
+    prop_inner = hub.ACROSS_FLATS / 2 + x_end - modules.SLEEVE_L / 2 - m.BOAT_PROP_D / 2
     check("boat propellers clear the hub", prop_inner > hub.ACROSS_FLATS / 2 + 5,
           f"(inner tip {prop_inner:.0f} mm from the centre, hub edge {hub.ACROSS_FLATS / 2:.0f} mm)")
     lift = 2 * math.pi * (m.FLOAT_D / 2) ** 2 * 320 / 1e6
     print(f"Boat: two 320 mm floats displace {lift:.1f} kg fully submerged")
+
+
+def latch_checks(parts, arm):
+    """Pin, spring, knob and sensor of the port latch (one port; all four are the same)."""
+    import math
+    base, lid = parts["hub_base"], parts["hub_lid"]
+    zl = hub.LATCH_Z_LID
+    loc = hub.port_location("FRONT")
+    plug = loc * arm["port_plug"]
+    tube = loc * arm["tube"]
+    print("Latch:")
+    for lifted in (False, True):
+        state = "lifted" if lifted else "latched"
+        pin = loc * latch.pin(zl, lifted)
+        moving = [pin, loc * latch.collar_placed(zl, lifted), loc * latch.knob_placed(zl, lifted)]
+        clash = sum((base & p).volume + (lid & p).volume for p in moving)
+        check(f"pin, collar and knob move freely in base and lid ({state})", clash < 0.5,
+              f"(overlap {clash:.2f} mm3)")
+        clash = (pin & plug).volume + (pin & tube).volume
+        check(f"pin clears the plug and the carbon tube ({state})", clash < 0.5, f"(overlap {clash:.2f} mm3)")
+        space = latch.spring_space(zl, lifted)
+        check(f"spring has {space:.1f} mm ({state}), more than its solid length",
+              space >= latch.SPRING_SOLID, f"(solid {latch.SPRING_SOLID} mm)")
+    depth = port.PLUG_SQ / 2 - latch.tip_z()
+    check("latched pin reaches 3 mm into the plug", depth >= 3.0, f"({depth:.1f} mm)")
+    lift_clear = latch.tip_z() + latch.LIFT - (port.PLUG_SQ / 2 + port.FIT_CLEAR + port.ROOF_CLEAR)
+    check("lifted pin is clear of the plug's top", lift_clear >= 1.0, f"(by {lift_clear:.1f} mm)")
+    ramp = port.PLUG_SQ / 2 - port.LATCH_DEPTH
+    check("ramp starts below the resting pin tip, so the plug lifts it", ramp < latch.tip_z(),
+          f"(ramp {ramp:.1f}, tip {latch.tip_z():.1f} mm)")
+
+    # hall sensor: field on the axis of a 2 x 1 mm N52 disc (Br 1.43 T), element ~0.8 mm
+    # under the TO-92 face, face 0.2 mm below the tower top
+    def disc_mt(z, d=2.0, t=1.0, br=1430.0):
+        r = d / 2
+        return br / 2 * ((t + z) / math.hypot(r, t + z) - z / math.hypot(r, z))
+    gap = latch.KNOB_GAP + 0.2 + 0.8
+    on, off = disc_mt(gap), disc_mt(gap + latch.LIFT)
+    check("hall switch on when latched (DRV5032AJ operates by 9.5 mT)", on > 2 * 9.5, f"({on:.0f} mT)")
+    check("hall switch off when lifted (releases below 3 mT at the latest)", off < 3.0, f"({off:.1f} mT)")
+    print(f"  pin 4 x {latch.PIN_L:.0f} mm, lift {latch.LIFT:.0f} mm, collar {latch.gauge_height(zl):.1f} mm "
+          f"above the tip, knob top {hub.PORT_Z + latch.levels(zl)['knob_top'] - hub.HEIGHT - hub.LID_T:.0f} mm above the lid")
+
+
+def printed_arm_checks(parts):
+    import math
+    arm_p = parts["printed_arm"]
+    base = parts["hub_base"]
+    print("Printed arm:")
+    for name in hub.PORT_ANGLES:
+        clash = (base & (hub.port_location(name) * arm_p)).volume
+        check(f"printed arm plugs into {name}", clash < 0.5, f"(overlap {clash:.2f} mm3)")
+    tube_x = -port.ENGAGE + port.END_WALL + modules.QUAD_ARM_TUBE_L + modules.MOTOR_OFFSET
+    check("printed arm puts the motor where the tube arm does", abs(modules.ARM_MOTOR_X - tube_x) < 0.01)
+    bb = arm_p.bounding_box()
+    check("printed arm lies flat (bottom of plug, beam and flange on the bed)",
+          abs(bb.min.Z + modules.ARM_BEAM / 2) < 0.01)
+    clash = (arm_p & latch.pin(hub.LATCH_Z_LID)).volume
+    check("latch pin fits the printed arm's pocket", clash < 0.5, f"(overlap {clash:.2f} mm3)")
+    # bending stiffness at the motor against the carbon tube version (E: PLA 3.5 GPa, CF 70 GPa)
+    b, w = modules.ARM_BEAM, modules.ARM_BEAM - 2 * modules.ARM_WALL
+    ei_pla = 3500 * (b ** 4 - w ** 4) / 12
+    ei_cf = 70000 * math.pi / 64 * (port.TUBE_OD ** 4 - port.TUBE_ID ** 4)
+    L, F = modules.ARM_MOTOR_X, 12.0
+    print(f"  {bb.size.X:.0f} mm long, {arm_p.volume / 1000:.0f} cm3 (~{arm_p.volume * 1.24e-3:.0f} g PLA); "
+          f"bend at the motor under {F:.0f} N: printed {F * L ** 3 / (3 * ei_pla):.2f} mm, "
+          f"carbon tube {F * L ** 3 / (3 * ei_cf):.2f} mm (beams from the hub face, plug assumed rigid)")
 
 
 def main():
@@ -182,6 +249,12 @@ def main():
         "motor_mount": modules.motor_mount(),
         "port_cap": modules.port_cap(),
         "port_coupon": port.coupon(),
+        "fit_gauge": port.fit_gauge(),
+        "battery_cover": hub.battery_cover(),
+        "printed_arm": modules.printed_arm(),
+        "latch_knob": latch.knob(),
+        "latch_collar": latch.collar(),
+        "latch_gauge": latch.setting_gauge(hub.LATCH_Z_LID),
     }
 
     print("Parts:")
@@ -200,6 +273,14 @@ def main():
         loc = hub.port_location(pname)
         clash = (base & (loc * arm["port_plug"])).volume
         check(f"plug clears socket at {pname}", clash < 0.5, f"(overlap {clash:.2f} mm3)")
+    plug_solid = port.plug(with_tube_bore=False)
+    for i, clear in enumerate(port.GAUGE_CLEAR):
+        y = (i - 1) * port.gauge_pitch()
+        clash = (parts["fit_gauge"] & (Pos(0, y, 0) * plug_solid)).volume
+        check(f"fit gauge socket {i + 1} ({clear:.2f} mm per side) takes the plug", clash < 0.5,
+              f"(overlap {clash:.2f} mm3)")
+    roof = port.SOCKET_WALL - port.FIT_CLEAR - port.ROOF_CLEAR
+    check("socket keeps at least 3 mm of wall above the plug", roof >= 3.0, f"({roof:.2f} mm)")
     wrong = hub.port_location("FRONT") * (
         port.plug().rotate(__import__("build123d").Axis.X, 90))
     clash = (base & wrong).volume
@@ -221,11 +302,13 @@ def main():
         along, across = x * math.cos(a) + y * math.sin(a), -x * math.sin(a) + y * math.cos(a)
         return abs(along) < hub.BATTERY_MAX[0] / 2 + margin and abs(across) < hub.BATTERY_MAX[1] / 2 + margin
 
-    latch = [(r * math.cos(math.radians(ang)), r * math.sin(math.radians(ang)))
-             for ang in hub.PORT_ANGLES.values() for r in [hub.ACROSS_FLATS / 2 + port.LATCH_X]]
     screws = list(hub._diagonals())
-    check("battery (up to %d x %d mm) leaves all four latch holes free" % hub.BATTERY_MAX[:2],
-          not any(in_pack(x, y, hub.LATCH_ACCESS_D / 2) for x, y in latch))
+    zl = hub.LATCH_Z_LID
+    knobs = [hub.port_location(n) * latch.knob_placed(zl, lifted) for n in hub.PORT_ANGLES
+             for lifted in (False, True)]
+    clash = sum((pack & k).volume for k in knobs)
+    check("battery (up to %d x %d mm) clears the four latch knobs, down or lifted" % hub.BATTERY_MAX[:2],
+          clash < 0.5, f"(overlap {clash:.2f} mm3)")
     check("battery leaves the four lid screws free", not any(in_pack(x, y, 3.0) for x, y in screws))
     ex, ey = hub.lead_exit_xy()
     check("battery lead slot is beside the pack, not under it",
@@ -239,6 +322,38 @@ def main():
               all(s <= m for s, m in zip(size, hub.BATTERY_MAX)))
     print(f"Battery: on the lid at {hub.BATTERY_ANGLE:.0f} deg, top of the largest pack "
           f"{hub.HEIGHT + hub.LID_T + hub.BATTERY_MAX[2]:.0f} mm above the hub floor")
+
+    # optional battery cover
+    cover = parts["battery_cover"]
+    clash = (cover & lid).volume
+    check("battery cover sits on the lid and clears the strap loops", clash < 0.5, f"(overlap {clash:.2f} mm3)")
+    clash = (cover & hub.battery_in_cover()).volume
+    check(f"a {hub.COVER_PACK_L:.0f} x {hub.BATTERY_MAX[1]:.0f} x {hub.BATTERY_MAX[2]:.0f} mm pack fits in the cover",
+          clash < 0.5, f"(overlap {clash:.2f} mm3)")
+    from build123d import Cylinder, extrude
+    outside = (cover - Pos(0, 0, hub.HEIGHT) * extrude(hub._octagon(hub.ACROSS_FLATS), 80)).volume
+    check("battery cover stays inside the lid outline", outside < 0.5, f"({outside:.1f} mm3 outside)")
+    blocked = sum((cover & k).volume for k in knobs)
+    check("battery cover clears the four latch knobs, down or lifted", blocked < 0.5,
+          f"(overlap {blocked:.2f} mm3)")
+    blocked = (cover & Pos(ex, ey, hub.HEIGHT + hub.LID_T + 20) * Box(hub.LEAD_EXIT[0], hub.LEAD_EXIT[1], 60)).volume
+    check("battery cover leaves the lead slot open", blocked < 0.5, f"(overlap {blocked:.2f} mm3)")
+    used = [xy for xy in screws if abs(-xy[0] * math.sin(a) + xy[1] * math.cos(a)) > 50]
+    holes = sum((cover & Pos(x, y, hub.HEIGHT + hub.LID_T) * Cylinder(1.5, 60)).volume for x, y in used)
+    check("battery cover has clear holes over two lid screws", len(used) == 2 and holes < 0.5,
+          f"(overlap {holes:.2f} mm3)")
+    others = [xy for xy in screws if xy not in used]
+    heads = sum((cover & Pos(x, y, hub.HEIGHT + hub.LID_T) * Cylinder(3.0, 3.5,
+                 align=(__import__("build123d").Align.CENTER,) * 2 + (__import__("build123d").Align.MIN,))).volume
+                for x, y in others)
+    check("battery cover clears the heads of the other two lid screws", heads < 0.5, f"(overlap {heads:.2f} mm3)")
+    print(f"Battery cover: top {hub.HEIGHT + hub.LID_T + hub.COVER_INNER_H + hub.COVER_ROOF:.0f} mm "
+          f"above the hub floor, takes packs up to {hub.COVER_PACK_L:.0f} mm long")
+    render(Compound(children=[base, lid, cover, hub.battery_in_cover(hub.BATTERY_SIZES["4S 1500 mAh"][0])]),
+           OUT / "hub_with_battery_cover.png", eye=(260, -200, 220))
+
+    latch_checks(parts, arm)
+    printed_arm_checks(parts)
 
     pcb = hub.board_solid()
     clash = (base & pcb).volume
@@ -254,7 +369,7 @@ def main():
     motor_r = hub.ACROSS_FLATS / 2 - port.ENGAGE + port.END_WALL \
         + modules.QUAD_ARM_TUBE_L + modules.MOTOR_OFFSET
     print(f"Quad: motor-to-motor diagonal {2 * motor_r:.0f} mm")
-    check("5-inch props clear each other", motor_r * 2 ** 0.5 > 127 + 5,
+    check("props clear each other by 20 mm", motor_r * 2 ** 0.5 > modules.PROP_D + 20,
           f"(adjacent motor spacing {motor_r * 2 ** 0.5:.0f} mm)")
 
     render(Compound(children=quad), OUT / "assembly_quad.png")

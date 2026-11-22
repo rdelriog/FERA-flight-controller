@@ -19,7 +19,7 @@ the operation mode and runs the pre-flight checks.
 ## Baseline
 
 - Firmware: PX4 (one binary, mode = airframe + parameter pack)
-- Size class: 5-inch, 4S LiPo, ~250 mm quad wheelbase
+- Size class: 9-inch props (9047) on 2212 920 KV motors, 4S LiPo, 400 mm motor-to-motor diagonal
 - MCU: STM32H743VIT6
 
 ## Quick start

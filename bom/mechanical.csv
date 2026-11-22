@@ -1,31 +1,35 @@
 Kit,Item,Spec,Qty,Notes,Status
 Hub,Hub base (printed),cad: hub_base,1,PETG or ASA; 4 walls; 40% gyroid,cad
 Hub,Hub lid (printed),cad: hub_lid,1,Gasketed variant for boat mode later,cad
-Hub,Latch pin,Steel dowel pin 4 mm x 30 mm,4,One per port,to-source
-Hub,Latch spring,Compression spring ~5 mm OD x 15 mm,4,Rate chosen in Phase 1 tests,tbd-p1
-Hub,Heat-set inserts,M3 x 5.7 mm brass,16,Lid screws + secondary retention,to-source
+Hub,Latch pin,Steel dowel pin 4 mm x 35 mm,4,"One per port; a printed collar is glued 9 mm above the tip (use 9_latch_gauge)",to-source
+Hub,Latch spring,"Compression spring, OD 6-8 mm, ID 4.5 mm or more, free length 14-20 mm, solid 5.5 mm or less",4,"Sits on the pin above the collar; 12 mm installed, 6 mm when lifted",to-source
+Hub,Latch magnet,2 x 1 mm N52 neodymium disc,4,Glued in the knob; 3 x 1 mm also works,to-source
+Hub,Latch sensor,TI DRV5032AJLPG hall switch (TO-92 open drain),4,"In the tower top; 1 VCC, 2 GND, 3 OUT to LATCHn on J14 (low = latched)",to-source
+Hub,Latch safety pin,2 mm pin or 1.75 mm filament x 25 mm,4,Through the knob and tower cross hole: secondary retention,to-source
+Hub,Heat-set inserts,M3 x 5.7 mm brass,4,Lid screws,to-source
 Hub,Screws,M3 x 8 / M3 x 12 socket head,16,,to-source
-Hub,Thumb-screws,M3 captive thumb-screw,4,Secondary retention on flight modules,to-source
-Hub,Battery,4S LiPo 1500-2200 mAh XT60,1,"1500 mAh for quad; 2200 mAh for plane/rover. Lid is laid out for packs up to 110 x 40 x 40 mm",to-source
+Hub,Battery,4S LiPo 2200 mAh XT60,1,"4S as on the 920 KV motor label and as the FERA Core board is designed for; 2200 mAh for plane/rover. Lid is laid out for packs up to 110 x 40 x 40 mm",to-source
+Hub,Battery cover (printed; optional),cad: battery_cover,1,"Bolts on with 2 x M3 x 12 in place of two lid screws; one strap across the open end; foam strip under the roof; packs up to 108 x 40 x 40 mm",cad
 Hub,Battery strap,20 x 250 mm hook-and-loop,2,"Through the four loops on the lid; add an anti-slip pad under the pack",to-source
 Hub,Dev flight controller (Phase 1 only),PX4-supported H743 board (e.g. Pixhawk 6C Mini),1,Replaced by FERA Core PCB in Phase 3,to-source
-Quad arm,Carbon tube,16 mm OD x 14 mm ID x 125 mm,4,Cut from 500 mm stock,to-source
-Quad arm,Port plug (printed),cad: port_plug,4,PA-CF or PETG; bonded + pinned to tube,cad
-Quad arm,Motor mount (printed),cad: motor_mount,4,16 x 16 mm M3 pattern (2207 motors),cad
-Quad arm,Motor,2207 1700-1950 KV,4,5-inch on 4S,to-source
+Quad arm,Printed arm (option A),cad: printed_arm,4,"Plug, beam and motor plate in one print; replaces the tube, plug, motor mount and tube pins below",cad
+Quad arm,Carbon tube (option B),16 mm OD x 14 mm ID x 143 mm,4,"Three per 500 mm stock tube, so buy two (or one 1 m tube)",to-source
+Quad arm,Port plug (printed; option B),cad: port_plug,4,PA-CF or PETG; bonded + pinned to tube,cad
+Quad arm,Motor mount (printed; option B),cad: motor_mount,4,"2212 motors: M3 holes 16 mm and 19 mm apart, in a cross",cad
+Quad arm,Motor,A2212 920 KV (Hawk's Work / Readytosky 2212),4,"Owned. 2 CW + 2 CCW; 400 mm diagonal frame",owned
 Quad arm,ESC,35 A single ESC (AM32 or BLHeli_32) with telemetry,4,One per arm inside/along the tube,to-source
-Quad arm,Propeller,5 inch tri-blade (e.g. 5x4.3x3),4,2 CW + 2 CCW,to-source
+Quad arm,Propeller,9047 (9 x 4.7 inch) two-blade,4,"Owned. 2 CW + 2 CCW",owned
 Quad arm,Module ID PCB,hardware/module-id,4,,to-design
-Quad arm,Tube pin,M3 x 20 screw + nyloc nut,8,Pins plug and motor mount to tube,to-source
+Quad arm,Tube pin (option B),M3 x 20 screw + nyloc nut,8,Pins plug and motor mount to tube,to-source
 Plane,Carbon tube,16 mm OD x 14 mm ID: 60 mm nose + 2 x 450 mm spars + 400 mm boom,4,Lengths as in cad/build.py (976 mm span),to-source
 Plane,Port plug (printed),cad: port_plug,4,,cad
-Plane,Nose motor mount (printed),cad: nose_motor_mount,1,2207-class motor on 16 x 16 mm M3; tractor,cad
+Plane,Nose motor mount (printed),cad: nose_motor_mount,1,"2212 motor, M3 on 16 / 19 mm; tractor",cad
 Plane,Wing rib (printed),cad: wing_rib,10,NACA 4412 at 200 mm chord; 5 per half,cad
 Plane,Servo rib (printed),cad: wing_servo_rib,2,One per half; 9 g servo,cad
 Plane,Tail mount (printed),cad: tail_mount,1,Clamps flat 3 mm stabiliser and fin,cad
 Plane,Anti-rotation rod,6 mm carbon rod x 430 mm,2,Through the rear hole of the ribs,to-source
 Plane,Wing covering and control surfaces,Film or foam skin; ailerons; 3 mm sheet stabiliser + fin,1,Not designed yet,to-design
-Plane,Motor + ESC + prop,2207/2306 motor + 35 A ESC + 7-8 inch prop,1,,to-source
+Plane,Motor + ESC + prop,2212 motor + 35 A ESC + 8-9 inch prop,1,One of the quad's motors,to-source
 Plane,Servos,9 g metal-gear digital,4,2 aileron + elevator + rudder,to-source
 Rover,Carbon tube,16 mm OD x 14 mm ID x 85 mm,4,Same length as the quad arms,to-source
 Rover,Port plug (printed),cad: port_plug,4,,cad
@@ -45,6 +49,6 @@ Boat,Port plug (printed),cad: port_plug,2,Cap the FRONT and BACK ports,cad
 Boat,Float saddle (printed),cad: float_saddle,2,,cad
 Boat,Thruster mount (printed),cad: thruster_mount,2,Air propeller; motor axis fore-aft,cad
 Boat,Float,65 mm closed-cell foam cylinder x 320 mm or longer,2,Two 320 mm floats displace 2.1 kg,to-source
-Boat,Motor + ESC + prop,2207 motor + 35 A ESC + 5 inch prop,2,The quad's parts; one tractor and one pusher prop,to-source
+Boat,Motor + ESC + prop,2212 motor + 35 A ESC + 5 inch prop,2,"The quad's motors and ESCs, but 5-inch props: a 9-inch prop hits the water under this mast",to-source
 Boat,Sealed hub lid,Gasketed lid variant,1,Not designed: the hub is not waterproof,to-design
 All,Blanking cap,cad: port_cap + module ID PCB,2,Closes unused ports,cad

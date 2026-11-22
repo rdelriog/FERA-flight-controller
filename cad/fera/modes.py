@@ -8,17 +8,18 @@ Local frame of a tube-end part (same as modules.motor_mount): tube axis along X,
 at X = 0, the part's sleeve covers X = -SLEEVE_L .. 0, Z is up.
 
 Bought parts the geometry assumes (change the constants to suit what you have):
-  plane   2207-class brushless motor (16 x 16 mm M3), 9 g servos, 6 mm rod, 3 mm sheet
+  plane   2212-class brushless motor (M3 on 16 / 19 mm), 9 g servos, 6 mm rod, 3 mm sheet
   rover   25 mm gear motor (25GA-370 style: 7 mm boss, 2 x M3 on 17 mm, 4 mm D shaft)
   crawler the same gear motor, M4 bolts for the idlers, 1.75 mm filament as hinge pins
-  boat    65 mm foam floats (pool noodle), the quad's 2207 motors and 5-inch props in air
+  boat    65 mm foam floats (pool noodle), the quad's 2212 motors with 5-inch props in air
+          (a 9-inch prop does not fit under this mast: see BOAT_PROP_D)
 """
 import math
 
 from build123d import Align, Box, Cylinder, Plane, Polygon, Pos, Rot, extrude
 
 from . import port
-from .modules import MOTOR_PATTERN, MOTOR_SCREW_D, MOTOR_SHAFT_D, SLEEVE_L, SLEEVE_SQ
+from .modules import MOTOR_HOLES, MOTOR_SCREW_D, MOTOR_SHAFT_D, SLEEVE_L, SLEEVE_SQ
 
 BORE_R = (port.TUBE_OD + port.TUBE_BORE_CLEAR) / 2
 END_WALL = 2.0
@@ -44,10 +45,8 @@ def _sleeve_cuts():
 def _motor_pattern(depth):
     """Brushless motor screw holes and shaft clearance, along Z, centred on the origin."""
     cut = Cylinder(MOTOR_SHAFT_D / 2, depth)
-    for sx in (-1, 1):
-        for sy in (-1, 1):
-            cut += Pos(sx * MOTOR_PATTERN / 2, sy * MOTOR_PATTERN / 2, 0) * Cylinder(
-                MOTOR_SCREW_D / 2, depth)
+    for hx, hy in MOTOR_HOLES:
+        cut += Pos(hx, hy, 0) * Cylinder(MOTOR_SCREW_D / 2, depth)
     return cut
 
 
@@ -320,6 +319,7 @@ FLOAT_D = 65.0
 SADDLE_T = 4.0
 SADDLE_L = 44.0             # along the float
 THRUST_Z = 75.0             # prop axis above the tube axis: 5-inch prop clears the hub and water
+BOAT_PROP_D = 127.0         # the boat needs its own 5-inch props; the quad's 9-inch ones would hit the water
 THRUST_PLATE_T = 8.0
 
 

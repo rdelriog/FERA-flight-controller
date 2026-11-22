@@ -59,6 +59,10 @@ PARTS = {
     # name: (stl, rotation, copies, settings, support-free cylinder or None, note)
     # The cylinder (radius, height) is centred on the tube axis and is wider than the 16 mm
     # bore, so the ledge at the end of the bore gets no support column down the bore.
+    "0_fit_gauge": ("fit_gauge", AS_MODELLED, 1,
+                    {**BRIDGES, "infill_sparse_density": 20, "wall_line_count": 3, "top_layers": 4,
+                     "bottom_layers": 4, "adhesion_type": "brim", "brim_width": 5}, None,
+                    "Three short sockets, 0.20 / 0.30 / 0.40 mm clearance per side (1, 2, 3 notches)."),
     "1_coupon": ("port_coupon", AS_MODELLED, 1, {**LOAD, **BRIDGES}, None,
                  "Test socket, printed lying down exactly as the sockets in the hub print."),
     "2_plug": ("port_plug", PLUS_X_DOWN, 1,
@@ -72,6 +76,17 @@ PARTS = {
                    "Floor on the bed, no support: socket roofs and windows are bridges."),
     "6_hub_lid": ("hub_lid", AS_MODELLED, 1, {**SHELL, **BRIDGES}, None,
                   "Flat, no support: the four strap loops print as bridges."),
+    "7_battery_cover": ("battery_cover", FLIPPED, 1,
+                        {**SHELL, **BRIDGES, "wall_line_count": 3, "infill_sparse_density": 20,
+                         "top_layers": 4, "bottom_layers": 4}, None,
+                        "Optional. Upside down: roof on the bed, no support (tab gussets are 45 degrees)."),
+    "8_arm_printed": ("printed_arm", AS_MODELLED, 1, {**LOAD, **BRIDGES}, None,
+                      "One-piece quad arm (no tube, plug or motor mount needed). Bottom on the bed, no support."),
+    "8_arm_printed_x4": ("printed_arm", AS_MODELLED, 4, {**LOAD, **BRIDGES}, None, "Four one-piece arms."),
+    "9_latch_knob_x4": ("latch_knob", FLIPPED, 4, LOAD, None, "Knob top on the bed, no support."),
+    "9_latch_collar_x4": ("latch_collar", AS_MODELLED, 4, {**LOAD, "adhesion_type": "brim", "brim_width": 4},
+                          None, "Four collars for the latch pins."),
+    "9_latch_gauge": ("latch_gauge", AS_MODELLED, 1, LOAD, None, "Sets each collar 9 mm above its pin tip."),
     "plug_x4": ("port_plug", PLUS_X_DOWN, 4,
                 {**LOAD, "support_enable": True, "support_type": "buildplate",
                  "adhesion_type": "brim", "brim_width": 5}, (10.0, 46.0), "Four plugs."),
