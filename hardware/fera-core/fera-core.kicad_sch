@@ -4,7 +4,7 @@
 	(generator_version "8.0")
 	(uuid "636fca46-dd7c-5065-9c18-fffd74082a60")
 	(paper "A4")
-	(title_block (title "FERA Core - Overview") (date "2026-11-15") (rev "A (preliminary)") (company "The Modular Drone Co") (comment 1 "Generated from gen/design.py by gen/make_schematic.py - edit design.py, not this file"))
+	(title_block (title "FERA Core - Overview") (date "2026-11-17") (rev "A (preliminary)") (company "The Modular Drone Co") (comment 1 "Generated from gen/design.py by gen/make_schematic.py - edit design.py, not this file"))
 	(lib_symbols
 
 	)

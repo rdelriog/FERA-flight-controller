@@ -1,19 +1,14 @@
 {
- "unrouted": [
-  [
-   "GPS_RX",
-   "U1.93"
-  ]
- ],
+ "unrouted": [],
  "stats": {
-  "nets": 83,
-  "connections": 138,
-  "unrouted_connections": 1,
+  "nets": 116,
+  "connections": 202,
+  "unrouted_connections": 0,
   "plane_stubs_failed": 0,
-  "rip_ups": 46,
-  "segments": 1827,
-  "vias": 317,
-  "seconds": 712
+  "rip_ups": 74,
+  "segments": 2350,
+  "vias": 380,
+  "seconds": 937
  },
  "nets": {
   "OSC_IN": {
@@ -76,40 +71,154 @@
    "pads": 3,
    "complete": true
   },
-  "P3_S2": {
-   "length": 34.29,
+  "IMU_SCK": {
+   "length": 3.84,
+   "vias": 0,
+   "pads": 2,
+   "complete": true
+  },
+  "IMU_CS": {
+   "length": 3.84,
+   "vias": 0,
+   "pads": 2,
+   "complete": true
+  },
+  "P2_S3": {
+   "length": 16.43,
+   "vias": 0,
+   "pads": 2,
+   "complete": true
+  },
+  "P1_5V": {
+   "length": 5.69,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P2_5V": {
+   "length": 5.69,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P3_5V": {
+   "length": 5.69,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P0_S1_C": {
+   "length": 6.09,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P0_S2_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P0_S3_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P0_ID_C": {
+   "length": 6.38,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P0_TELEM_C": {
+   "length": 5.94,
    "vias": 1,
    "pads": 2,
    "complete": true
   },
-  "IMU_DRDY": {
-   "length": 7.38,
-   "vias": 2,
+  "P1_S1_C": {
+   "length": 6.32,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P1_S2_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P1_S3_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P1_ID_C": {
+   "length": 6.61,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P2_S1_C": {
+   "length": 6.32,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P2_S2_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P2_S3_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P2_TELEM_C": {
+   "length": 5.82,
+   "vias": 1,
    "pads": 2,
    "complete": true
   },
-  "SD_D0": {
-   "length": 35.95,
-   "vias": 2,
+  "P3_S1_C": {
+   "length": 6.09,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P3_S2_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P3_S3_C": {
+   "length": 3.12,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P3_ID_C": {
+   "length": 6.38,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
+  "P3_TELEM_C": {
+   "length": 5.82,
+   "vias": 1,
    "pads": 2,
    "complete": true
   },
-  "SD_D1": {
-   "length": 38.11,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "SD_D2": {
-   "length": 35.16,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "SD_CK": {
-   "length": 41.37,
-   "vias": 2,
-   "pads": 2,
+  "P0_5V": {
+   "length": 14.23,
+   "vias": 1,
+   "pads": 3,
    "complete": true
   },
   "LED_B_A": {
@@ -130,21 +239,9 @@
    "pads": 2,
    "complete": true
   },
-  "USB_CC2": {
-   "length": 4.33,
-   "vias": 0,
-   "pads": 2,
-   "complete": true
-  },
   "DBG_RX": {
    "length": 4.0,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "DBG_TX": {
-   "length": 6.4,
-   "vias": 2,
+   "vias": 0,
    "pads": 2,
    "complete": true
   },
@@ -160,64 +257,58 @@
    "pads": 4,
    "complete": true
   },
-  "BUZZER": {
-   "length": 9.39,
+  "TELEM1_TX": {
+   "length": 47.75,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "IMU_MOSI": {
+   "length": 10.66,
    "vias": 0,
    "pads": 2,
    "complete": true
   },
-  "P2_S3": {
-   "length": 18.39,
-   "vias": 1,
-   "pads": 2,
-   "complete": true
-  },
-  "P2_S1": {
-   "length": 22.77,
-   "vias": 1,
-   "pads": 2,
-   "complete": true
-  },
-  "P2_ID": {
-   "length": 25.24,
-   "vias": 1,
+  "P3_EN": {
+   "length": 31.83,
+   "vias": 2,
    "pads": 3,
    "complete": true
   },
-  "P0_S1": {
-   "length": 36.36,
-   "vias": 1,
+  "P0_FLT": {
+   "length": 21.7,
+   "vias": 2,
    "pads": 2,
    "complete": true
   },
+  "P1_EN": {
+   "length": 19.56,
+   "vias": 0,
+   "pads": 3,
+   "complete": true
+  },
   "P0_ID": {
-   "length": 19.85,
-   "vias": 2,
+   "length": 16.86,
+   "vias": 0,
    "pads": 3,
    "complete": true
   },
   "BOOT0": {
-   "length": 4.59,
+   "length": 5.06,
    "vias": 0,
    "pads": 3,
    "complete": true
   },
-  "GPS_TX": {
-   "length": 44.93,
-   "vias": 4,
+  "P1_FLT": {
+   "length": 20.25,
+   "vias": 0,
    "pads": 2,
    "complete": true
   },
-  "GPS_RX": {
-   "length": 0.0,
-   "vias": 0,
+  "P1_TELEM_C": {
+   "length": 6.68,
+   "vias": 1,
    "pads": 2,
-   "complete": false
-  },
-  "I2C1_SCL": {
-   "length": 39.39,
-   "vias": 2,
-   "pads": 3,
    "complete": true
   },
   "USB_D_N": {
@@ -226,124 +317,94 @@
    "pads": 2,
    "complete": true
   },
-  "P1_ID": {
-   "length": 20.94,
+  "I2C1_SCL": {
+   "length": 38.54,
+   "vias": 2,
+   "pads": 3,
+   "complete": true
+  },
+  "P2_ID_C": {
+   "length": 6.61,
    "vias": 0,
    "pads": 3,
    "complete": true
   },
-  "USB_VBUS_SENSE": {
-   "length": 39.15,
+  "P3_S2": {
+   "length": 32.03,
    "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "P1_S2": {
-   "length": 18.06,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "SD_DET": {
-   "length": 45.7,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "IMU_SCK": {
-   "length": 3.84,
-   "vias": 0,
-   "pads": 2,
-   "complete": true
-  },
-  "IMU_CS": {
-   "length": 3.84,
-   "vias": 0,
-   "pads": 2,
-   "complete": true
-  },
-  "IMU_MOSI": {
-   "length": 10.6,
-   "vias": 0,
    "pads": 2,
    "complete": true
   },
   "IMU_MISO": {
-   "length": 6.18,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "LATCH3": {
-   "length": 40.74,
+   "length": 21.5,
    "vias": 4,
    "pads": 2,
    "complete": true
   },
-  "SWCLK": {
-   "length": 35.13,
+  "RC_TX": {
+   "length": 55.63,
    "vias": 2,
    "pads": 2,
    "complete": true
   },
-  "LED_R": {
-   "length": 62.7,
+  "V5_SENSE": {
+   "length": 12.2,
+   "vias": 0,
+   "pads": 4,
+   "complete": true
+  },
+  "P3_S3": {
+   "length": 26.64,
    "vias": 2,
    "pads": 2,
    "complete": true
   },
-  "TELEM1_RX": {
-   "length": 54.1,
+  "P2_S2": {
+   "length": 27.9,
    "vias": 2,
    "pads": 2,
    "complete": true
   },
-  "LED_G": {
-   "length": 55.04,
+  "P2_ID": {
+   "length": 17.63,
    "vias": 2,
+   "pads": 3,
+   "complete": true
+  },
+  "P2_S1": {
+   "length": 17.17,
+   "vias": 0,
    "pads": 2,
    "complete": true
   },
-  "LED_B": {
-   "length": 57.47,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "P0_S2": {
-   "length": 28.21,
+  "P3_S1": {
+   "length": 30.73,
    "vias": 2,
    "pads": 2,
    "complete": true
   },
   "NRST": {
-   "length": 62.32,
+   "length": 66.14,
    "vias": 4,
    "pads": 3,
    "complete": true
   },
-  "SWO": {
-   "length": 41.4,
-   "vias": 4,
-   "pads": 2,
-   "complete": true
-  },
-  "P1_S3": {
-   "length": 20.58,
-   "vias": 1,
-   "pads": 2,
-   "complete": true
-  },
-  "TELEM1_TX": {
-   "length": 56.53,
+  "BUZZER": {
+   "length": 9.51,
    "vias": 2,
    "pads": 2,
    "complete": true
   },
-  "RC_TX": {
-   "length": 66.12,
-   "vias": 6,
+  "P1_S1": {
+   "length": 24.83,
+   "vias": 2,
    "pads": 2,
+   "complete": true
+  },
+  "VSYS": {
+   "length": 200.82,
+   "vias": 12,
+   "pads": 15,
    "complete": true
   },
   "VBAT_IN": {
@@ -358,160 +419,292 @@
    "pads": 2,
    "complete": true
   },
-  "SD_CMD": {
-   "length": 114.14,
-   "vias": 4,
-   "pads": 2,
-   "complete": true
-  },
-  "P3_ID": {
-   "length": 24.06,
-   "vias": 2,
-   "pads": 3,
-   "complete": true
-  },
   "VCAP1": {
-   "length": 6.02,
-   "vias": 1,
-   "pads": 2,
-   "complete": true
-  },
-  "V5_SENSE": {
-   "length": 13.31,
-   "vias": 2,
-   "pads": 4,
-   "complete": true
-  },
-  "P3_S1": {
-   "length": 34.26,
-   "vias": 1,
-   "pads": 2,
-   "complete": true
-  },
-  "P3_S3": {
-   "length": 33.79,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "P1_S1": {
-   "length": 25.86,
-   "vias": 1,
-   "pads": 2,
-   "complete": true
-  },
-  "I2C2_SCL": {
-   "length": 95.76,
-   "vias": 2,
-   "pads": 4,
-   "complete": true
-  },
-  "P2_S2": {
-   "length": 34.47,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "LATCH1": {
-   "length": 38.2,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "SAFETY_BTN": {
-   "length": 40.31,
-   "vias": 0,
-   "pads": 2,
-   "complete": true
-  },
-  "LATCH0": {
-   "length": 39.8,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "P0_S3": {
-   "length": 32.28,
+   "length": 8.14,
    "vias": 3,
    "pads": 2,
    "complete": true
   },
-  "RC_RX": {
-   "length": 72.41,
-   "vias": 4,
-   "pads": 2,
-   "complete": true
-  },
-  "SWDIO": {
-   "length": 39.89,
-   "vias": 2,
-   "pads": 2,
-   "complete": true
-  },
-  "SD_D3": {
-   "length": 58.29,
-   "vias": 6,
-   "pads": 2,
-   "complete": true
-  },
-  "USB_D_P": {
-   "length": 45.69,
-   "vias": 0,
-   "pads": 2,
-   "complete": true
-  },
-  "LATCH2": {
-   "length": 59.85,
-   "vias": 6,
-   "pads": 2,
-   "complete": true
-  },
   "3V3A": {
-   "length": 4.23,
+   "length": 6.71,
    "vias": 1,
    "pads": 5,
    "complete": true
   },
   "VCAP2": {
-   "length": 5.49,
-   "vias": 1,
+   "length": 10.75,
+   "vias": 3,
    "pads": 2,
    "complete": true
   },
   "USB_VBUS": {
-   "length": 30.25,
-   "vias": 4,
+   "length": 28.51,
+   "vias": 3,
    "pads": 9,
    "complete": true
   },
-  "3V3S": {
-   "length": 37.19,
+  "USB_CC2": {
+   "length": 9.57,
    "vias": 0,
-   "pads": 11,
-   "complete": true
-  },
-  "ESC_TELEM": {
-   "length": 139.08,
-   "vias": 4,
-   "pads": 6,
-   "complete": true
-  },
-  "I2C1_SDA": {
-   "length": 43.9,
-   "vias": 4,
-   "pads": 3,
+   "pads": 2,
    "complete": true
   },
   "I2C2_SDA": {
-   "length": 111.05,
-   "vias": 7,
+   "length": 104.6,
+   "vias": 5,
    "pads": 4,
    "complete": true
   },
-  "VSYS": {
-   "length": 190.63,
-   "vias": 17,
-   "pads": 12,
+  "IMU_DRDY": {
+   "length": 7.38,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "I2C2_SCL": {
+   "length": 123.6,
+   "vias": 6,
+   "pads": 4,
+   "complete": true
+  },
+  "GPS_TX": {
+   "length": 41.65,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "TELEM1_RX": {
+   "length": 46.37,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "ESC_TELEM": {
+   "length": 113.74,
+   "vias": 6,
+   "pads": 6,
+   "complete": true
+  },
+  "P3_ID": {
+   "length": 18.45,
+   "vias": 3,
+   "pads": 3,
+   "complete": true
+  },
+  "P0_S3": {
+   "length": 26.32,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "LED_R": {
+   "length": 60.45,
+   "vias": 4,
+   "pads": 2,
+   "complete": true
+  },
+  "P2_FLT": {
+   "length": 23.22,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "P2_EN": {
+   "length": 26.96,
+   "vias": 2,
+   "pads": 3,
+   "complete": true
+  },
+  "I2C1_SDA": {
+   "length": 41.27,
+   "vias": 3,
+   "pads": 3,
+   "complete": true
+  },
+  "RC_RX": {
+   "length": 63.15,
+   "vias": 4,
+   "pads": 2,
+   "complete": true
+  },
+  "P0_S1": {
+   "length": 39.69,
+   "vias": 3,
+   "pads": 2,
+   "complete": true
+  },
+  "DBG_TX": {
+   "length": 4.41,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "P3_FLT": {
+   "length": 26.19,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "3V3S": {
+   "length": 39.85,
+   "vias": 7,
+   "pads": 11,
+   "complete": true
+  },
+  "GPS_RX": {
+   "length": 42.01,
+   "vias": 4,
+   "pads": 2,
+   "complete": true
+  },
+  "3V3P": {
+   "length": 162.79,
+   "vias": 6,
+   "pads": 6,
+   "complete": true
+  },
+  "SWDIO": {
+   "length": 38.02,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SD_CMD": {
+   "length": 43.3,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SD_DET": {
+   "length": 45.51,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SD_D3": {
+   "length": 38.53,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "LATCH3": {
+   "length": 39.48,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SD_D2": {
+   "length": 37.98,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SD_CK": {
+   "length": 45.37,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "P1_S2": {
+   "length": 15.78,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "P1_ID": {
+   "length": 17.48,
+   "vias": 2,
+   "pads": 3,
+   "complete": true
+  },
+  "USB_VBUS_SENSE": {
+   "length": 50.57,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "P0_EN": {
+   "length": 40.9,
+   "vias": 2,
+   "pads": 3,
+   "complete": true
+  },
+  "P0_S2": {
+   "length": 30.1,
+   "vias": 4,
+   "pads": 2,
+   "complete": true
+  },
+  "SAFETY_BTN": {
+   "length": 38.78,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "LED_B": {
+   "length": 56.32,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "LATCH0": {
+   "length": 35.09,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "LATCH1": {
+   "length": 37.41,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "LATCH2": {
+   "length": 40.48,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SWO": {
+   "length": 39.36,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "USB_D_P": {
+   "length": 42.5,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SWCLK": {
+   "length": 42.0,
+   "vias": 0,
+   "pads": 2,
+   "complete": true
+  },
+  "LED_G": {
+   "length": 64.02,
+   "vias": 4,
+   "pads": 2,
+   "complete": true
+  },
+  "SD_D0": {
+   "length": 35.99,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "SD_D1": {
+   "length": 38.43,
+   "vias": 2,
+   "pads": 2,
+   "complete": true
+  },
+  "P1_S3": {
+   "length": 16.76,
+   "vias": 2,
+   "pads": 2,
    "complete": true
   }
  }

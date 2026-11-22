@@ -32,7 +32,9 @@ and the PX4 board files (`boards/fera/core-v1`), so they cannot drift apart.
 | S3 (servo PWM) | PC6 | PC7 | PB0 | PB1 | TIM3 CH1–4 (AF2) | |
 | ID (1-Wire) | PB5 | PA10 | PB2 | PC1 | GPIO open-drain, 2.2 kΩ pull-up; each on the MCU edge facing its port | |
 | LATCH sense | PD3 | PD4 | PD7 | PD10 | GPIO input, pull-up, RC filter | |
-| TELEM in | shared → PE0 | | | | UART8 RX (AF8). Preliminary board ties all four together; 4:1 mux (select PE10, PE12) deferred | |
+| TELEM in | shared → PE0 | | | | UART8 RX (AF8). All four ports join here, each through its own 1 kΩ, so one shorted module cannot hold the line. A 4:1 mux is still deferred | |
+| 5 V switch enable (high = on) | PE1 | PB12 | PE12 | PA2 | GPIO push-pull, 10 kΩ pull-down: off while the MCU is in reset | |
+| 5 V switch fault (low = overcurrent) | PB4 | PD11 | PE10 | PA1 | GPIO input with pull-up; TPS2069C FLT is open-drain with a 9 ms deglitch | |
 
 ## Sensors and storage
 
@@ -62,12 +64,13 @@ and the PX4 board files (`boards/fera/core-v1`), so they cannot drift apart.
 |---|---|---|---|
 | HSE 16 MHz | PH0, PH1 | Crystal + load caps | |
 | System rail (VSYS) sense | PC0 | ADC1 IN10, 10 k / 10 k divider + 100 nF | |
-| Port 5 V rail enable | PE15 | Load switch: modules get 5 V only after ID check | |
+| Port 5 V switches | see port table | One TPS2069C per port (1.5 A, limit 1.7–2.5 A). Firmware enables a port after reading its module ID | |
+| Port 3.3 V | — | Own LP5907 (3V3P, 250 mA, current-limited), not the MCU's 3V3 | |
 | Buzzer | PA0 | TIM2 CH1 (AF1) | |
 | Status LEDs (red / green / blue) | PC13, PC14, PC15 | Low-current GPIO only | |
 | Safety / arm button | PA15 | Button to ground, internal pull-up | |
 | BOOT0 | BOOT0 | 10 kΩ pull-down + test pad | |
-| Spare | PA1, PA2, PA3, PA5, PA6, PA4 (not 5 V tolerant), PA7 (SPI1 free for a second IMU), PB4, PC2, PC3, PC4, PC5, PE1 | Bring out on test pads | |
+| Spare | PA3, PA5, PA6, PA4 (not 5 V tolerant), PA7 (SPI1 free for a second IMU), PC2, PC3, PC4, PC5, PE15 | Bring out on test pads | |
 
 ## Checked against datasheets
 

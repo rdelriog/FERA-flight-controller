@@ -5,9 +5,9 @@
  "groups": [
   {
    "group": "USB full speed (12 Mbit/s)",
-   "longest_mm": 45.69,
-   "spread_mm": 3.06,
-   "vias": 0
+   "longest_mm": 42.63,
+   "spread_mm": 0.13,
+   "vias": 2
   },
   {
    "group": "USB connector side",
@@ -17,15 +17,15 @@
   },
   {
    "group": "IMU SPI4 (up to 24 MHz)",
-   "longest_mm": 10.6,
-   "spread_mm": 6.76,
-   "vias": 4
+   "longest_mm": 21.5,
+   "spread_mm": 17.66,
+   "vias": 6
   },
   {
    "group": "microSD SDMMC1 (up to 50 MHz)",
-   "longest_mm": 114.14,
-   "spread_mm": 78.98,
-   "vias": 18
+   "longest_mm": 45.37,
+   "spread_mm": 9.38,
+   "vias": 12
   },
   {
    "group": "Crystal 16 MHz",

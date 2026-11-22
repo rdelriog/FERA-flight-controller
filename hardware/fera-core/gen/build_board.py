@@ -64,6 +64,7 @@ def build():
     bds.m_ViasMinSize = mm(D.VIA_DIA)
     bds.m_MinThroughDrill = mm(D.VIA_DRILL)
     bds.m_CopperEdgeClearance = mm(0.3)
+    bds.m_HoleClearance = mm(0.19)       # floor only: fera-core.kicad_dru sets 0.25 mm, except J12
     nc = bds.m_NetSettings.m_DefaultNetClass
     nc.SetClearance(mm(D.CLEARANCE))
     nc.SetTrackWidth(mm(D.TRACK))

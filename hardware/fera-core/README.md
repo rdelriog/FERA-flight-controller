@@ -63,7 +63,10 @@ lets `--check` compare every net against the library's pin names.
 - 5 V buck (LMR33630) for the ports' 5 V rail, with bulk capacitor and clamp
 - System rail VSYS (5 V or USB through two diodes) feeding the 3.3 V buck (TLV62569), the
   sensor LDO and the GPS / TELEM / RC connectors, so USB cannot back-feed the battery side
-- Four ports, each with a power connector and an 8-way signal connector
+- Four ports, each with a power connector and an 8-way signal connector, and per port: a
+  TPS2069C current-limited switch for the module's 5 V (enable and fault to the MCU),
+  100 Ω in series with S1–S3 and ID, 1 kΩ in the shared telemetry line and a USBLC6-4 clamp
+  on the contact side. Port 3.3 V has its own current-limited LDO (3V3P)
 - USB-C with ESD protection, microSD, GPS / TELEM1 / RC / latch-sense connectors
 - Safety button, three status LEDs, test pads (BOOT0, debug UART, buzzer)
 
@@ -80,13 +83,16 @@ fits inside the printed hub and places the standoffs under the mounting holes.
 |---|---|---|
 | F.Cu | 1 oz | Components, signals, ground fill, battery pours |
 | In1 | 2 oz | GND plane (carries the motor return current) |
-| In2 | 2 oz | 3V3 plane |
+| In2 | 2 oz | 3V3 fill, also carries slow signals (0.2 mm tracks, 0.2 mm gaps) |
 | In3 | 2 oz | VBAT plane (battery current to the four ports) |
 | In4 | 2 oz | 5V plane |
 | B.Cu | 1 oz | Decoupling, signals, ground fill |
 
 Nets with a plane are not routed pad to pad: each surface pad gets a short stub
-and a via. The dielectric thicknesses in the board file are a typical build
+and a via. The router may also put slow signals (GPIO, UARTs, I2C, port lines) on In2; the
+fast and sensitive nets (USB, SD, IMU, crystal, buck nodes, current sense) stay on the outer
+layers over a solid plane. Where In2 tracks fence off a piece of the 3V3 fill, the router
+joins that piece's vias back with a short outer-layer track (`stitch_plane` in `router.py`). The dielectric thicknesses in the board file are a typical build
 (0.11 mm prepreg under the outer layers); the fabricator's own stack-up replaces them.
 
 ## Status (measured on the generated files)
@@ -94,16 +100,17 @@ and a via. The dielectric thicknesses in the board file are a typical build
 | Check | Result |
 |---|---|
 | Schematic ERC (KiCad 8) | 0 errors, 0 warnings |
-| Schematic netlist vs `design.py` | 375 pin-to-net assignments, 0 differences |
-| Independent circuit review | Done, see `audit.md`: 1 error and most warnings fixed, 9 findings still open |
+| Schematic netlist vs `design.py` | 501 pin-to-net assignments, 0 differences |
+| Independent circuit review | Done, see `audit.md`. Its error and most warnings are fixed, including port protection; still open: 5 V budget, reverse polarity, telemetry mux and some optional parts |
 | MCU functions vs KiCad's STM32H743 pin table | 44 of 44 on a pin that offers them |
 | Schematic ↔ board parity (KiCad DRC) | 0 issues |
-| Placement | 100 parts + 4 mounting holes, no courtyard overlaps, all inside the outline |
-| Routing | 137 of 138 signal connections (GPS_RX, MCU pin 93 to the GPS connector, is open); every plane pad has its via |
-| Board DRC | 0 clearance errors, 0 shorts, 1 unconnected. 4 hole-clearance errors inside the stock USB-C footprint (ground pads next to its locating pegs); about 100 silkscreen warnings (cosmetic) |
+| Placement | 132 parts + 4 mounting holes, no courtyard overlaps, all inside the outline |
+| Routing | 202 of 202 signal connections; every plane pad has its via |
+| Board DRC | 0 errors, 0 unconnected items; about 140 silkscreen warnings (cosmetic). The stock USB-C footprint's ground pads sit 0.19 mm from its locating holes: allowed for that footprint only in `fera-core.kicad_dru` (0.25 mm everywhere else); confirm the fab accepts it |
 
 The router's result depends on routing order, so a different placement can leave a
-connection or two open; `check_board.py` reports them.
+connection open; it ends with a repair pass that moves only the tracks in the way, and
+`check_board.py` reports anything left.
 
 ### Battery path (`gen/power_check.py`)
 
@@ -113,8 +120,8 @@ pad. Copper at about 70 °C, outer-layer ground fills ignored (pessimistic).
 
 | Load | Board copper + shunt | of which shunt | Drop, battery pads to worst port (+ and −) | Connector contacts (8 × 0.8 mΩ) |
 |---|---|---|---|---|
-| 4 × 15 A = 60 A (XT30 continuous rating) | 6.0 W | 0.7 W | 76 mV + 31 mV | 1.4 W |
-| 4 × 30 A = 120 A (XT30 momentary rating) | 24 W | 2.9 W | 151 mV + 61 mV | 5.8 W |
+| 4 × 15 A = 60 A (XT30 continuous rating) | 6.1 W | 0.7 W | 77 mV + 32 mV | 1.4 W |
+| 4 × 30 A = 120 A (XT30 momentary rating) | 24 W | 2.9 W | 154 mV + 63 mV | 5.8 W |
 
 Loss scales with the square of the current: about 0.7 W at a 20 A hover and 2.7 W at 40 A.
 Where the 6.0 W goes at 60 A: VBAT plane 2.0 W, GND plane 1.6 W, top-layer copper next to
@@ -136,10 +143,10 @@ about 97 Ω (USB wants 90 Ω ± 15 %). Confirm with the fabricator's stack-up.
 
 | Group | Longest | Spread | Notes |
 |---|---|---|---|
-| IMU SPI4 (≤ 24 MHz) | 10.6 mm | 6.8 mm | Was a cross-board run on SPI1; SCK and CS are 3.8 mm with no vias |
-| USB full speed, MCU to ESD part | 45.7 mm | 3.1 mm (18 ps) | D+ 0 vias, D− 0. Not a coupled pair: fine for 12 Mbit/s, re-route with KiCad's pair router (net class `USB`) if you want it tidy |
+| IMU SPI4 (≤ 24 MHz) | 21.5 mm | 17.7 mm (105 ps) | SCK and CS 3.8 mm with no vias; MISO now detours (21.5 mm, 4 vias). Still short for 24 MHz |
+| USB full speed, MCU to ESD part | 42.6 mm | 0.1 mm (1 ps) | D+ 2 vias, D− 0. Not a coupled pair: fine for 12 Mbit/s, re-route with KiCad's pair router (net class `USB`) if you want it tidy |
 | USB, ESD part to connector | 5.7 mm | 0.5 mm | Frozen before anything else is routed |
-| microSD SDMMC1 (≤ 50 MHz) | 114.1 mm | 79.0 mm (468 ps) | Still inside SD timing at 50 MHz, but SD_CMD took a 114 mm detour with 4 vias in this routing run: hand-route the SD bus |
+| microSD SDMMC1 (≤ 50 MHz) | 45.4 mm | 9.4 mm (56 ps) | Routed first, 2 vias per line (the previous run had a 114 mm SD_CMD detour) |
 | Crystal | 5.1 mm | — | No vias; other nets are kept out of its area on the top layer |
 | Current-sense pair | 8.6 mm | 0.1 mm | From the shunt's own sense pads |
 
@@ -149,9 +156,9 @@ bottom-layer signals run over the 5 V plane.
 
 ## Known gaps before this can be fabricated
 
-- **Open audit findings** (`audit.md`): the 5 V regulator is 3 A for all four ports, the
-  port supply and signal pins have no current limit, series resistors or ESD parts, there is
-  no reverse-polarity protection, and ESC telemetry is one shared net.
+- **Open audit findings** (`audit.md`): the 5 V regulator is 3 A for all four ports (each
+  port is now limited to 1.7–2.5 A, but four together can still exceed 3 A), there is no
+  reverse-polarity protection, and ESC telemetry from all ports shares one UART.
 - **The schematic is generated, not drawn.** It matches the board by construction and by
   check, and the circuit has now had one independent review, but that review could not
   read the STM32H743 datasheet and nothing has been simulated or built.
@@ -170,5 +177,5 @@ bottom-layer signals run over the 5 V plane.
 - **System rail routing:** VSYS is a 0.4 mm track about 190 mm long linking three corners
   of the board; fine for the 1 A it carries, but it should become a pour or a wider track
   when the board is routed by hand.
-- Left off deliberately: second IMU, FRAM, CAN, ESC-telemetry mux, port 5 V load
-  switch, buzzer driver, RGB LED driver.
+- Left off deliberately: second IMU, FRAM, CAN, ESC-telemetry mux, buzzer driver,
+  RGB LED driver.

@@ -4,7 +4,7 @@
 	(generator_version "8.0")
 	(uuid "031a964d-c63f-5d8b-bd8e-a3d7c5c4277f")
 	(paper "A3")
-	(title_block (title "FERA Core - USB, debug and external connectors") (date "2026-11-15") (rev "A (preliminary)") (company "The Modular Drone Co") (comment 1 "Generated from gen/design.py by gen/make_schematic.py - edit design.py, not this file"))
+	(title_block (title "FERA Core - USB, debug and external connectors") (date "2026-11-17") (rev "A (preliminary)") (company "The Modular Drone Co") (comment 1 "Generated from gen/design.py by gen/make_schematic.py - edit design.py, not this file"))
 	(lib_symbols
 		(symbol "Connector:USB_C_Receptacle_USB2.0_16P"
 			(pin_names (offset 1.016))
@@ -1181,7 +1181,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "fe5a1cf9-8272-5e88-92fb-d39872598ed6")
-	(property "Reference" "#PWR0115" (at 25.4 91.44 0) (effects (font (size 1.27 1.27)) (hide yes)))
+	(property "Reference" "#PWR0124" (at 25.4 91.44 0) (effects (font (size 1.27 1.27)) (hide yes)))
 	(property "Value" "GND" (at 25.4 95.38 0) (effects (font (size 1.27 1.27))))
 	(property "Footprint" "" (at 25.4 91.44 0) (effects (font (size 1.27 1.27)) (hide yes)))
 	(property "Datasheet" "" (at 25.4 91.44 0) (effects (font (size 1.27 1.27)) (hide yes)))
@@ -1190,7 +1190,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0115")
+				(reference "#PWR0124")
 				(unit 1)
 			)
 		)
@@ -1222,7 +1222,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "2bec83c7-d2fa-5e43-abe5-d4e0a241ebbb")
-	(property "Reference" "#PWR0116"
+	(property "Reference" "#PWR0125"
 		(at 17.78 91.44 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1234,7 +1234,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0116")
+				(reference "#PWR0125")
 				(unit 1)
 			)
 		)
@@ -1286,7 +1286,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "2f738d92-6a88-5b3c-aabb-13217023f84c")
-	(property "Reference" "#PWR0117"
+	(property "Reference" "#PWR0126"
 		(at 20.32 125.73 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1298,7 +1298,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0117")
+				(reference "#PWR0126")
 				(unit 1)
 			)
 		)
@@ -1350,7 +1350,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "ebc5fa42-2673-5794-842d-95af1bdeee95")
-	(property "Reference" "#PWR0118"
+	(property "Reference" "#PWR0127"
 		(at 30.48 125.73 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1362,7 +1362,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0118")
+				(reference "#PWR0127")
 				(unit 1)
 			)
 		)
@@ -1425,7 +1425,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "f22b6c87-32c1-54e8-bb2d-f92fbbd48e26")
-	(property "Reference" "#PWR0119" (at 91.44 76.2 0) (effects (font (size 1.27 1.27)) (hide yes)))
+	(property "Reference" "#PWR0128" (at 91.44 76.2 0) (effects (font (size 1.27 1.27)) (hide yes)))
 	(property "Value" "GND" (at 91.44 80.14 0) (effects (font (size 1.27 1.27))))
 	(property "Footprint" "" (at 91.44 76.2 0) (effects (font (size 1.27 1.27)) (hide yes)))
 	(property "Datasheet" "" (at 91.44 76.2 0) (effects (font (size 1.27 1.27)) (hide yes)))
@@ -1434,7 +1434,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0119")
+				(reference "#PWR0128")
 				(unit 1)
 			)
 		)
@@ -1496,7 +1496,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "320fd571-49c5-5a9f-8e08-9c83a88b730a")
-	(property "Reference" "#PWR0120"
+	(property "Reference" "#PWR0129"
 		(at 77.47 96.52 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1508,7 +1508,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0120")
+				(reference "#PWR0129")
 				(unit 1)
 			)
 		)
@@ -1561,7 +1561,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "f628691f-89cf-5c65-af1e-d51924d58a55")
-	(property "Reference" "#PWR0121"
+	(property "Reference" "#PWR0130"
 		(at 120.65 96.52 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1573,7 +1573,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0121")
+				(reference "#PWR0130")
 				(unit 1)
 			)
 		)
@@ -1589,7 +1589,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "042fe580-3b3f-5313-b466-6f5b3bac5a9b")
-	(property "Reference" "#PWR0122"
+	(property "Reference" "#PWR0131"
 		(at 133.35 96.52 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1601,7 +1601,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0122")
+				(reference "#PWR0131")
 				(unit 1)
 			)
 		)
@@ -1691,7 +1691,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "08833117-c296-5b99-ae14-d720c6e4a117")
-	(property "Reference" "#PWR0123"
+	(property "Reference" "#PWR0132"
 		(at 157.48 113.03 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1703,7 +1703,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0123")
+				(reference "#PWR0132")
 				(unit 1)
 			)
 		)
@@ -1755,7 +1755,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "e124a42b-543f-5f87-8ff7-c484da96fc53")
-	(property "Reference" "#PWR0124"
+	(property "Reference" "#PWR0133"
 		(at 71.12 161.29 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1767,7 +1767,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0124")
+				(reference "#PWR0133")
 				(unit 1)
 			)
 		)
@@ -1825,7 +1825,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "24a6aa14-6d19-5ae2-a5b6-76a0cc50bcd4")
-	(property "Reference" "#PWR0125"
+	(property "Reference" "#PWR0134"
 		(at 71.12 190.5 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1837,7 +1837,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0125")
+				(reference "#PWR0134")
 				(unit 1)
 			)
 		)
@@ -1859,7 +1859,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "591b9af9-61f4-5cbf-b921-2d98e3da4a2e")
-	(property "Reference" "#PWR0126"
+	(property "Reference" "#PWR0135"
 		(at 71.12 215.9 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1871,7 +1871,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0126")
+				(reference "#PWR0135")
 				(unit 1)
 			)
 		)
@@ -1933,7 +1933,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "1febcdef-ebf3-5342-8994-4c794766141d")
-	(property "Reference" "#PWR0127"
+	(property "Reference" "#PWR0136"
 		(at 185.42 60.96 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1945,7 +1945,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0127")
+				(reference "#PWR0136")
 				(unit 1)
 			)
 		)
@@ -1961,7 +1961,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "304297b2-0cd8-51d2-b81f-9787c3b7f978")
-	(property "Reference" "#PWR0128"
+	(property "Reference" "#PWR0137"
 		(at 185.42 63.5 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -1973,7 +1973,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0128")
+				(reference "#PWR0137")
 				(unit 1)
 			)
 		)
@@ -1989,7 +1989,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "5b486be0-17d9-53b2-ae17-a5530a26a9cc")
-	(property "Reference" "#PWR0129"
+	(property "Reference" "#PWR0138"
 		(at 193.04 71.12 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2001,7 +2001,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0129")
+				(reference "#PWR0138")
 				(unit 1)
 			)
 		)
@@ -2053,7 +2053,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "31a0308d-0308-57d5-b6d2-015b756067d0")
-	(property "Reference" "#PWR0130"
+	(property "Reference" "#PWR0139"
 		(at 185.42 93.98 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2065,7 +2065,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0130")
+				(reference "#PWR0139")
 				(unit 1)
 			)
 		)
@@ -2089,7 +2089,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "0198af62-cce6-5610-8fe5-9d1441a5ff2b")
-	(property "Reference" "#PWR0131"
+	(property "Reference" "#PWR0140"
 		(at 185.42 106.68 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2101,7 +2101,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0131")
+				(reference "#PWR0140")
 				(unit 1)
 			)
 		)
@@ -2117,7 +2117,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "96d3ba35-c378-5298-b544-f804d1970a5d")
-	(property "Reference" "#PWR0132"
+	(property "Reference" "#PWR0141"
 		(at 193.04 114.3 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2129,7 +2129,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0132")
+				(reference "#PWR0141")
 				(unit 1)
 			)
 		)
@@ -2181,7 +2181,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "4b9bdce3-89c7-5353-b3ff-582479131df0")
-	(property "Reference" "#PWR0133"
+	(property "Reference" "#PWR0142"
 		(at 187.96 139.7 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2193,7 +2193,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0133")
+				(reference "#PWR0142")
 				(unit 1)
 			)
 		)
@@ -2215,7 +2215,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "dc9e60a8-01f9-58b9-a354-cbb9bcd11c2e")
-	(property "Reference" "#PWR0134"
+	(property "Reference" "#PWR0143"
 		(at 187.96 152.4 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2227,7 +2227,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0134")
+				(reference "#PWR0143")
 				(unit 1)
 			)
 		)
@@ -2243,7 +2243,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "32b120ab-f803-5acb-b8d1-5956ce91230c")
-	(property "Reference" "#PWR0135"
+	(property "Reference" "#PWR0144"
 		(at 195.58 160.02 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2255,7 +2255,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0135")
+				(reference "#PWR0144")
 				(unit 1)
 			)
 		)
@@ -2305,7 +2305,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "48b5c0f6-f697-5a39-b7a6-e9366187e709")
-	(property "Reference" "#PWR0136"
+	(property "Reference" "#PWR0145"
 		(at 182.88 185.42 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2317,7 +2317,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0136")
+				(reference "#PWR0145")
 				(unit 1)
 			)
 		)
@@ -2337,7 +2337,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "20e7ef5d-94a1-5f91-90d2-99c13a0b6e4e")
-	(property "Reference" "#PWR0137"
+	(property "Reference" "#PWR0146"
 		(at 182.88 193.04 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2349,7 +2349,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0137")
+				(reference "#PWR0146")
 				(unit 1)
 			)
 		)
@@ -2365,7 +2365,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "1249f548-34db-5543-b35b-4955b10668e8")
-	(property "Reference" "#PWR0138"
+	(property "Reference" "#PWR0147"
 		(at 190.5 200.66 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2377,7 +2377,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0138")
+				(reference "#PWR0147")
 				(unit 1)
 			)
 		)
@@ -2427,7 +2427,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "de0f9dae-528d-504d-bf10-ee5a25122a62")
-	(property "Reference" "#PWR0139"
+	(property "Reference" "#PWR0148"
 		(at 177.8 217.17 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2439,7 +2439,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0139")
+				(reference "#PWR0148")
 				(unit 1)
 			)
 		)
@@ -2491,7 +2491,7 @@
 	(on_board yes)
 	(dnp no)
 	(uuid "c0bf474d-72e2-53f1-8af8-666cf55fb890")
-	(property "Reference" "#PWR0140"
+	(property "Reference" "#PWR0149"
 		(at 187.96 217.17 0)
 		(effects (font (size 1.27 1.27)) (hide yes))
 	)
@@ -2503,7 +2503,7 @@
 	(instances
 		(project "fera-core"
 			(path "/636fca46-dd7c-5065-9c18-fffd74082a60/07ad7378-6345-571d-9e01-c40afbeb80d2"
-				(reference "#PWR0140")
+				(reference "#PWR0149")
 				(unit 1)
 			)
 		)

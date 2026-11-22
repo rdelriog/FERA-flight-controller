@@ -1,7 +1,7 @@
 """Route outside KiCad and draw the result as a PNG (fast iteration / debug aid).
 
     cad/.venv/Scripts/python hardware/fera-core/gen/preview.py
-Needs gen/pads.json (build_board.py --dump-pads). Red = top copper, blue = bottom,
+Needs gen/pads.json (build_board.py --dump-pads). Red = top copper, blue = bottom, yellow = inner signal layer,
 green dots = vias, yellow rings = pads the router could not connect.
 """
 import json
@@ -22,7 +22,13 @@ S = 14          # pixels per mm
 def main():
     data = json.loads((HERE / "pads.json").read_text())
     pads, holes = data["pads"], [tuple(h) for h in data["holes"]]
-    result = R.route(pads, holes, D, data.get("keepouts", ()), quick="--quick" in sys.argv)
+    keepouts = data.get("keepouts", ())
+    if "--stitch-only" in sys.argv:            # redo only the plane stitching on the last result
+        result = json.loads((HERE / "route_unstitched.json").read_text())
+    else:
+        result = R.route(pads, holes, D, keepouts, quick="--quick" in sys.argv)
+        (HERE / "route_unstitched.json").write_text(json.dumps(result))
+    R.stitch_plane(pads, holes, D, keepouts, result)
     (HERE / "route_result.json").write_text(json.dumps(result))
     draw(pads, result)
 
@@ -51,7 +57,8 @@ def draw(pads, result, name="preview.png"):
             pts = [P(p["x"] + lx * c + ly * s, p["y"] - lx * s + ly * c)
                    for lx, ly in ((-hx, -hy), (hx, -hy), (hx, hy), (-hx, hy))]
             d.polygon(pts, fill=col)
-    for layer, col in (("B", (70, 130, 255, 210)), ("F", (255, 80, 70, 210))):
+    for layer, col in (("In2.Cu", (240, 200, 60, 200)), ("B", (70, 130, 255, 210)),
+                       ("F", (255, 80, 70, 210))):
         for net, lay, x1, y1, x2, y2, w in result["segments"]:
             if lay == layer:
                 d.line([P(x1, y1), P(x2, y2)], fill=col, width=max(int(w * S), 2))

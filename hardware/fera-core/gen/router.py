@@ -1,8 +1,10 @@
-"""Small two-layer maze router with rip-up and reroute, for the preliminary FERA Core layout.
+"""Small maze router with rip-up and reroute, for the preliminary FERA Core layout.
 
-Routes signals on the outer layers (F / B) of the six-layer board. Nets that
-own an inner plane (GND, 3V3, VBAT) are not routed pad to pad: every surface
-pad just gets a short stub to a via, and the plane does the rest.
+Routes signals on the layers in design.ROUTE_LAYERS: the outer layers (F / B) and, for the
+nets design.inner_ok() allows, an inner layer that the 3V3 fill shares. Each layer has its
+own minimum track width and clearance (the inner layers are 2 oz copper). Nets that own an
+inner plane (GND, 3V3, VBAT, 5V) are not routed pad to pad: every surface pad just gets a
+short stub to a via, and the plane does the rest.
 
 Pure Python (no numpy) so it runs inside KiCad's interpreter. Geometry in mm,
 relative to the board centre; the grid is 0.1 mm.
@@ -16,11 +18,13 @@ from array import array
 GRID = 0.1
 BLOCK = 0xFFFF
 ORTH, DIAG, VIA_COST = 10, 14, 400
+INNER_EXTRA = 3                 # added cost per step on an inner layer (it cuts the 3V3 fill)
 MAX_EXPANSIONS = 900_000
 LANE = 0.6                      # escape lane reserved beyond each end of a narrow pad
 MAX_RIPS = 160                   # total rip-up events allowed
 RIPS_PER_NET = 3                 # per net and per round
 ROUNDS = 4                       # extra rounds for nets that are still open
+REPAIR_TRIES = 40                # final local repair attempts on what is left open
 GHOST_PENALTY = 120              # cost of stepping on another net's track when planning a rip-up
 
 
@@ -33,6 +37,11 @@ def disk(radius):
 class Router:
     def __init__(self, pads, holes, D, keepouts=()):
         self.D = D
+        self.layers = list(getattr(D, "ROUTE_LAYERS", ("F", "B")))
+        self.L = len(self.layers)
+        rules = getattr(D, "LAYER_RULES", {})
+        self.clrs = [rules.get(n, {}).get("clearance", D.CLEARANCE) for n in self.layers]
+        self.hws = [rules.get(n, {}).get("track", D.TRACK) / 2 for n in self.layers]
         self.clr = D.CLEARANCE
         self.hw0 = D.TRACK / 2
         xs = [p[0] for p in D.OUTLINE]
@@ -41,7 +50,7 @@ class Router:
         self.W = int(round((max(xs) + 2.0 - self.x0) / GRID)) + 1
         self.H = int(round((max(ys) + 2.0 - self.y0) / GRID)) + 1
         self.N = self.W * self.H
-        self.occ = [array("H", [BLOCK]) * self.N for _ in range(2)]
+        self.occ = [array("H", [BLOCK]) * self.N for _ in range(self.L)]
         self.novia = bytearray(self.N)
         self.codes = {}
         self.segments, self.vias, self.unrouted = [], [], []
@@ -49,15 +58,15 @@ class Router:
         self.pads = pads
         self._outline()
         for x, y, drill in holes:
-            r = drill / 2 + 0.25 + self.hw0
-            for layer in (0, 1):
-                self._mark(layer, x, y, 0, 0, 0, True, r, BLOCK)
-            self._mark_novia(x, y, 0, 0, 0, True, r + 0.3)
+            r = drill / 2 + 0.25
+            for layer in range(self.L):
+                self._mark(layer, x, y, 0, 0, 0, True, r + self.hws[layer], BLOCK)
+            self._mark_novia(x, y, 0, 0, 0, True, r + self.hw0 + 0.3)
         for p in pads:
             code = self.code(p["net"]) if p["net"] else BLOCK
             for layer in self._layers(p):
                 self._mark(layer, p["x"], p["y"], p["sx"], p["sy"], p["rot"], p["round"],
-                           p.get("clr", self.clr) + self.hw0, code)
+                           max(p.get("clr", self.clr), self.clrs[layer]) + self.hws[layer], code)
             self._mark_novia(p["x"], p["y"], p["sx"], p["sy"], p["rot"], p["round"],
                              D.VIA_DIA / 2 + 0.05)
         for k in keepouts:                       # footprint rule areas (e.g. under the SD socket)
@@ -84,6 +93,7 @@ class Router:
             sy = p["sy"] + (2 * LANE if p["sy"] > p["sx"] else 0)
             for layer in self._layers(p):
                 self._mark(layer, p["x"], p["y"], sx, sy, p["rot"], False, 0.05, self.code(p["net"]))
+        self.allowed = {}                        # net -> tuple of bool per layer
         for x1, y1, x2, y2 in getattr(D, "NO_VIA_AREAS", ()):
             self._mark_novia((x1 + x2) / 2, (y1 + y2) / 2, x2 - x1, y2 - y1, 0, False, 0.0)
         for pour in D.POURS:                     # outer-layer pours belong to their net
@@ -103,7 +113,7 @@ class Router:
                         occ[i] = BLOCK
         # every cell this close to a via centre must be free, so that other copper ends up
         # at least one full clearance from the via's edge (rounded up to the grid)
-        self.via_chk = self._offsets(self._grid_up(D.VIA_DIA / 2 - self.hw0))
+        self.via_chk = [self._offsets(self._grid_up(D.VIA_DIA / 2 - hw)) for hw in self.hws]
         for netname, x, y, dia, drill in D.STITCH_VIAS:
             self._lay_via(self.cell(x, y), self.code(netname), netname, dia=dia, drill=drill)
 
@@ -143,9 +153,17 @@ class Router:
     def _offsets(self, radius):
         return [dy * self.W + dx for dx, dy in disk(radius)]
 
-    @staticmethod
-    def _layers(p):
+    def _layers(self, p):
+        """Router layers a pad has copper on: a through-hole pad is on every layer."""
+        if p["tht"]:
+            return list(range(self.L))
         return [0 if l == "F" else 1 for l in p["layers"]]
+
+    def layers_for(self, net):
+        if net not in self.allowed:
+            ok = getattr(self.D, "inner_ok", lambda n: True)(net)
+            self.allowed[net] = tuple(i < 2 or ok for i in range(self.L))
+        return self.allowed[net]
 
     def _cells_in_shape(self, cx, cy, sx, sy, rot, rnd, inflate):
         """Yield cells whose centre lies within `inflate` of the shape (negative shrinks)."""
@@ -187,17 +205,17 @@ class Router:
         poly = self.D.OUTLINE
         n = len(poly)
         for iy, i0, i1 in self._poly_rows(poly):
-            for layer in (0, 1):
+            for layer in range(self.L):
                 self.occ[layer][iy * self.W + i0: iy * self.W + i1 + 1] = array("H", [0]) * (i1 - i0 + 1)
-        keep = 0.3 + self.hw0
+        keep = 0.3 + max(self.hws)
         for k in range(n):
             (x1, y1), (x2, y2) = poly[k], poly[(k + 1) % n]
             length = math.hypot(x2 - x1, y2 - y1)
             rot = -math.degrees(math.atan2(y2 - y1, x2 - x1))
             cells = list(self._cells_in_shape((x1 + x2) / 2, (y1 + y2) / 2, length, 0.0, rot, False, keep))
             for i in cells:
-                self.occ[0][i] = BLOCK
-                self.occ[1][i] = BLOCK
+                for occ in self.occ:
+                    occ[i] = BLOCK
                 self.novia[i] = 1
 
     def pad_cells(self, p, code):
@@ -223,21 +241,17 @@ class Router:
     def _via_ok(self, i, code, occs=None, novia=None):
         if (novia or self.novia)[i]:
             return False
-        o0, o1 = occs or self.occ
-        for off in self.via_chk:
-            j = i + off
-            v = o0[j]
-            if v and v != code:
-                return False
-            v = o1[j]
-            if v and v != code:
-                return False
+        for occ, chk in zip(occs or self.occ, self.via_chk):
+            for off in chk:
+                v = occ[i + off]
+                if v and v != code:
+                    return False
         return True
 
     def _lay_via(self, i, code, net, emit=True, dia=None, drill=None):
         dia, drill = dia or self.D.VIA_DIA, drill or self.D.VIA_DRILL
-        offs = self._offsets(dia / 2 + self.clr + self.hw0 - 0.011)
-        for occ in self.occ:
+        for layer, occ in enumerate(self.occ):
+            offs = self._offsets(dia / 2 + self.clrs[layer] + self.hws[layer] - 0.011)
             for off in offs:
                 j = i + off
                 v = occ[j]
@@ -252,15 +266,17 @@ class Router:
             self.vias.append((net, *self.xy(i), dia, drill))
         else:                                               # a rippable signal via
             for off in self._offsets(self.D.VIA_DIA / 2 + 0.15):
-                self.center[i + off] = net
-                self.center[self.N + i + off] = net
+                for layer in range(self.L):
+                    self.center[layer * self.N + i + off] = net
 
     def _lay_path(self, path, code, net, width, emit=True):
         """Mark a path's copper. emit=True also records it as permanent output."""
         N = self.N
-        offs = self._offsets(width / 2 + self.clr + self.hw0 - 0.011)
+        offs_by = [self._offsets(max(width / 2, self.hws[l]) + self.clrs[l] + self.hws[l] - 0.011)
+                   for l in range(self.L)]
         for key in path:
             occ = self.occ[key // N]
+            offs = offs_by[key // N]
             i = key % N
             for off in offs:
                 j = i + off
@@ -303,8 +319,9 @@ class Router:
             self._segment(net, run_start, prev, width)
 
     def _segment(self, net, a, b, width):
-        layer = "F" if a // self.N == 0 else "B"
-        self.segments.append((net, layer, *self.xy(a % self.N), *self.xy(b % self.N), width))
+        layer = a // self.N
+        self.segments.append((net, self.layers[layer], *self.xy(a % self.N), *self.xy(b % self.N),
+                              round(max(width, 2 * self.hws[layer]), 3)))
 
     # -- rip-up support ----------------------------------------------------------
     def snapshot(self):
@@ -357,7 +374,7 @@ class Router:
 
     # -- search --------------------------------------------------------------
     def _search(self, sources, goal, bbox, code, width, allow_via=True, penalty=None,
-                limit=MAX_EXPANSIONS, ghost=False):
+                limit=MAX_EXPANSIONS, ghost=False, allowed=None):
         """A* from a set of source keys to the first key for which goal(key) is true.
 
         ghost=True plans against the base state only (ignoring every routed signal),
@@ -368,8 +385,9 @@ class Router:
         novia = self.base_novia if ghost else self.novia
         live = self.occ
         # a wider track needs its extra half-width (rounded up to the grid) free on each side
-        wide = (self._offsets(self._grid_up(width / 2 - self.hw0))
-                if width / 2 > self.hw0 + 1e-6 else None)
+        wides = [self._offsets(self._grid_up(width / 2 - hw)) if width / 2 > hw + 1e-6 else None
+                 for hw in self.hws]
+        allowed = allowed or (True,) * self.L
         moves = ((1, ORTH), (-1, ORTH), (W, ORTH), (-W, ORTH),
                  (W + 1, DIAG), (W - 1, DIAG), (-W + 1, DIAG), (-W - 1, DIAG))
         if bbox:
@@ -409,6 +427,8 @@ class Router:
             layer, i = divmod(key, N)
             occ = occs[layer]
             base = layer * N
+            wide = wides[layer]
+            extra = INNER_EXTRA if layer >= 2 else 0
             for d, cost in moves:
                 j = i + d
                 v = occ[j]
@@ -432,7 +452,7 @@ class Router:
                             break
                     if not ok:
                         continue
-                ng = gc + cost
+                ng = gc + cost + extra
                 if penalty:
                     ng += penalty(j)
                 if ghost and live[layer][j] != occ[j]:
@@ -443,14 +463,17 @@ class Router:
                     parent[nk] = key
                     push(heap, (ng + h(j), ng, nk))
             if allow_via and self._via_ok(i, code, occs, novia):
-                nk = (1 - layer) * N + i
                 ng = gc + VIA_COST
                 if ghost and not self._via_ok(i, code):
                     ng += GHOST_PENALTY * 4
-                if ng < g.get(nk, 1 << 60):
-                    g[nk] = ng
-                    parent[nk] = key
-                    push(heap, (ng + h(i), ng, nk))
+                for other in range(self.L):
+                    if other == layer or not allowed[other]:
+                        continue
+                    nk = other * N + i
+                    if ng < g.get(nk, 1 << 60):
+                        g[nk] = ng
+                        parent[nk] = key
+                        push(heap, (ng + h(i), ng, nk))
         return None
 
     # -- net strategies ------------------------------------------------------
@@ -498,7 +521,8 @@ class Router:
         code = self.code(net)
         width = self.D.WIDTHS.get(net, self.D.TRACK)
         N, W = self.N, self.W
-        cells = [self.pad_cells(p, code) for p in pads]
+        allowed = self.layers_for(net)
+        cells = [[c for c in self.pad_cells(p, code) if allowed[c // N]] for p in pads]
 
         def name(k):
             return f"{pads[k]['ref']}.{pads[k]['num']}"
@@ -518,10 +542,11 @@ class Router:
             ys = [c % N // W for c in target]
             bbox = (min(xs), min(ys), max(xs), max(ys))
             w = width
-            path = self._search(tree, target.__contains__, bbox, code, w, ghost=ghost)
+            path = self._search(tree, target.__contains__, bbox, code, w, ghost=ghost, allowed=allowed)
             if path is None and width > self.D.TRACK:
                 w = self.D.TRACK
-                path = self._search(tree, target.__contains__, bbox, code, w, ghost=ghost)
+                path = self._search(tree, target.__contains__, bbox, code, w, ghost=ghost,
+                                    allowed=allowed)
             if path is None:
                 missing += [name(k) for k in sorted(todo)]
                 break
@@ -533,6 +558,53 @@ class Router:
             tree.update(cells[k])
             todo.discard(k)
         return not missing, paths, missing
+
+
+def _open(failed):
+    return sum(len(v) for v in failed.values())
+
+
+def repair(r, by_net, failed, log, attempts=REPAIR_TRIES):
+    """Last pass for the few connections left open: rip up only what is in the way of one
+    open net, route it, then re-route the ripped nets in a shuffled order. A try is kept
+    only if fewer connections are open afterwards."""
+    import random
+    for attempt in range(attempts):
+        if not failed:
+            break
+        nets = sorted(failed)
+        net = nets[attempt % len(nets)]
+        saved, saved_failed = dict(r.routed), dict(failed)
+        r.routed.pop(net, None)
+        r.rebuild()
+        plan_ok, plan, _ = r.route_net(net, by_net[net], ghost=True)
+        if not plan_ok:
+            r.routed, failed = saved, saved_failed
+            r.rebuild()
+            continue
+        victims = sorted(r.blockers([p for p, _w in plan], net))
+        for v in victims:
+            r.routed.pop(v, None)
+        r.rebuild()
+        new_failed = {k: v for k, v in failed.items() if k != net}
+        ok, paths, missing = r.route_net(net, by_net[net])
+        r.routed[net] = paths
+        if not ok:
+            new_failed[net] = missing
+        random.Random(attempt).shuffle(victims)
+        for v in victims:
+            ok, paths, missing = r.route_net(v, by_net[v])
+            r.routed[v] = paths
+            if not ok:
+                new_failed[v] = missing
+        if _open(new_failed) < _open(failed):
+            log(f"router: repair {attempt + 1}: {net} (moved {len(victims)} nets) -> "
+                f"{_open(new_failed)} open")
+            failed = new_failed
+        else:
+            r.routed, failed = saved, saved_failed
+            r.rebuild()
+    return failed
 
 
 def route(pads, holes, D, keepouts=(), quick=False):
@@ -649,7 +721,10 @@ def route(pads, holes, D, keepouts=(), quick=False):
     if best and best[0] < sum(len(v) for v in failed.values()):
         log(f"router: keeping the best round ({best[0]} open) instead of the last one")
     if best:
-        r.routed, failed = best[1], best[2]
+        r.routed, failed = dict(best[1]), dict(best[2])
+    if failed:
+        r.rebuild()
+        failed = repair(r, by_net, failed, log)
     for net, paths in r.routed.items():
         for path, width in paths:
             r._emit(path, net, width)
@@ -672,3 +747,69 @@ def route(pads, holes, D, keepouts=(), quick=False):
                  segments=len(r.segments), vias=len(r.vias), seconds=round(time.time() - t0))
     log(f"router: {stats}")
     return dict(segments=r.segments, vias=r.vias, unrouted=unrouted, stats=stats, nets=report)
+
+
+def stitch_plane(pads, holes, D, keepouts, result, net="3V3", layer="In2.Cu", log=print):
+    """Signals routed on a plane layer can fence off parts of that plane. Find the vias of
+    the plane's net that sit on such a cut-off piece and join each to the main piece with a
+    track on the outer layers. Works on a finished result; appends to it in place."""
+    r = Router(pads, holes, D, keepouts)
+    if layer not in r.layers:
+        return 0
+    r.snapshot()
+    index = {name: i for i, name in enumerate(r.layers)}
+    for name, lay, x1, y1, x2, y2, w in result["segments"]:
+        code = r.code(name)
+        length = math.hypot(x2 - x1, y2 - y1)
+        rot = -math.degrees(math.atan2(y2 - y1, x2 - x1))
+        li = index[lay]
+        r._mark(li, (x1 + x2) / 2, (y1 + y2) / 2, length + w, w, rot, False,
+                r.clrs[li] + r.hws[li], code)
+    for name, x, y, dia, drill in result["vias"]:
+        r._lay_via(r.cell(x, y), r.code(name), name, emit=False, dia=dia, drill=drill)
+    code, li, W = r.code(net), index[layer], r.W
+    occ = r.occ[li]
+    label = {}
+    vias = sorted(r.via_cells.get(code, ()))
+    n = 0
+    for start in vias:                       # flood the free plane area from each via
+        if start in label:
+            continue
+        n += 1
+        stack = [start]
+        label[start] = n
+        while stack:
+            i = stack.pop()
+            for d in (1, -1, W, -W):
+                j = i + d
+                if j not in label and occ[j] in (0, code):
+                    label[j] = n
+                    stack.append(j)
+    count = collections.Counter(label[v] for v in vias)
+    if len(count) < 2:
+        return 0
+    main = count.most_common(1)[0][0]
+    targets = {v for v in vias if label[v] == main}
+    width = D.WIDTHS.get(net, D.TRACK)
+    fixed = 0
+    before = len(r.segments), len(r.vias)
+    for v in vias:
+        if label[v] == main:
+            continue
+        src = [v, r.N + v]
+        path = None
+        for w in (width, D.TRACK):
+            path = r._search(src, lambda k: k % r.N in targets and k % r.N != v, None, code, w,
+                             allowed=(True, True) + (False,) * (r.L - 2), limit=400_000)
+            if path:
+                break
+        if not path:
+            log(f"router: {net} via at {r.xy(v)} is cut off on {layer} and could not be joined")
+            continue
+        r._lay_path(path, code, net, w)
+        targets.add(v)
+        fixed += 1
+    result["segments"] += r.segments[before[0]:]
+    result["vias"] += r.vias[before[1]:]
+    log(f"router: {fixed} cut-off {net} vias joined on the outer layers")
+    return fixed

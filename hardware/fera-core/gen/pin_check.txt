@@ -21,8 +21,8 @@ U1  STM32H743VIT6  [MCU_ST_STM32H7:STM32H743VITx]
       20  VREF+                        input          3V3A
       21  VDDA                         power_in       3V3A
       22  PA0                          bidirectional  BUZZER
-      23  PA1                          bidirectional  -
-      24  PA2                          bidirectional  -
+      23  PA1                          bidirectional  P3_FLT
+      24  PA2                          bidirectional  P3_EN
       25  PA3                          bidirectional  -
       26  VSS                          passive        GND
       27  VDD                          power_in       3V3
@@ -38,9 +38,9 @@ U1  STM32H743VIT6  [MCU_ST_STM32H7:STM32H743VITx]
       37  PE7                          bidirectional  DBG_RX
       38  PE8                          bidirectional  DBG_TX
       39  PE9                          bidirectional  P0_S1
-      40  PE10                         bidirectional  -
+      40  PE10                         bidirectional  P2_FLT
       41  PE11                         bidirectional  P1_S1
-      42  PE12                         bidirectional  -
+      42  PE12                         bidirectional  P2_EN
       43  PE13                         bidirectional  P2_S1
       44  PE14                         bidirectional  P3_S1
       45  PE15                         bidirectional  -
@@ -49,14 +49,14 @@ U1  STM32H743VIT6  [MCU_ST_STM32H7:STM32H743VITx]
       48  VCAP                         power_out      VCAP1
       49  VSS                          passive        GND
       50  VDD                          power_in       3V3
-      51  PB12                         bidirectional  -
+      51  PB12                         bidirectional  P1_EN
       52  PB13                         bidirectional  -
       53  PB14                         bidirectional  -
       54  PB15                         bidirectional  -
       55  PD8                          bidirectional  RC_TX
       56  PD9                          bidirectional  RC_RX
       57  PD10                         bidirectional  LATCH3
-      58  PD11                         bidirectional  -
+      58  PD11                         bidirectional  P1_FLT
       59  PD12                         bidirectional  P0_S2
       60  PD13                         bidirectional  P1_S2
       61  PD14                         bidirectional  P2_S2
@@ -88,7 +88,7 @@ U1  STM32H743VIT6  [MCU_ST_STM32H7:STM32H743VITx]
       87  PD6                          bidirectional  TELEM1_RX
       88  PD7                          bidirectional  LATCH2
       89  PB3                          bidirectional  SWO
-      90  PB4                          bidirectional  -
+      90  PB4                          bidirectional  P0_FLT
       91  PB5                          bidirectional  P0_ID
       92  PB6                          bidirectional  GPS_TX
       93  PB7                          bidirectional  GPS_RX
@@ -96,7 +96,7 @@ U1  STM32H743VIT6  [MCU_ST_STM32H7:STM32H743VITx]
       95  PB8                          bidirectional  I2C1_SCL
       96  PB9                          bidirectional  I2C1_SDA
       97  PE0                          bidirectional  ESC_TELEM
-      98  PE1                          bidirectional  -
+      98  PE1                          bidirectional  P0_EN
       99  VSS                          passive        GND
      100  VDD                          power_in       3V3
 Y1  16MHz CL 8pF  [Device:Crystal_GND24]
@@ -134,6 +134,12 @@ U7  LP5907MFX-3.3  [Regulator_Linear:LP5907MFX-3.3]
        3  EN                           input          VSYS
        4  NC                           no_connect     -
        5  OUT                          power_out      3V3S
+U17  LP5907MFX-3.3  [Regulator_Linear:LP5907MFX-3.3]
+       1  IN                           power_in       VSYS
+       2  GND                          power_in       GND
+       3  EN                           input          VSYS
+       4  NC                           no_connect     -
+       5  OUT                          power_out      3V3P
 J9  BAT+  [Connector_Generic:Conn_01x01]
        1  Pin_1                        passive        VBAT_IN
 J10  BAT-  [Connector_Generic:Conn_01x01]
@@ -272,47 +278,99 @@ J1  PWR FRONT  [fera:XT30PW-F]
        1  MINUS                        passive        GND
        2  PLUS                         passive        VBAT
 J5  SIG FRONT  [Connector_Generic:Conn_02x04_Odd_Even]
-       1  Pin_1                        passive        P0_S1
-       2  Pin_2                        passive        5V
-       3  Pin_3                        passive        P0_S2
+       1  Pin_1                        passive        P0_S1_C
+       2  Pin_2                        passive        3V3P
+       3  Pin_3                        passive        P0_S2_C
        4  Pin_4                        passive        GND
-       5  Pin_5                        passive        P0_S3
-       6  Pin_6                        passive        3V3
-       7  Pin_7                        passive        P0_ID
-       8  Pin_8                        passive        ESC_TELEM
+       5  Pin_5                        passive        P0_S3_C
+       6  Pin_6                        passive        P0_TELEM_C
+       7  Pin_7                        passive        P0_ID_C
+       8  Pin_8                        passive        P0_5V
+U9  TPS2069CDBV  [Power_Management:TPS2069CDBV]
+       1  OUT                          power_out      P0_5V
+       2  GND                          power_in       GND
+       3  ~{FLT}                       open_collector P0_FLT
+       4  EN                           input          P0_EN
+       5  IN                           power_in       5V
+U13  USBLC6-4SC6  [Power_Protection:USBLC6-4SC6]
+       1  I/O1                         passive        P0_S1_C
+       2  GND                          passive        GND
+       3  I/O2                         passive        P0_S2_C
+       4  I/O3                         passive        P0_S3_C
+       5  VBUS                         passive        3V3
+       6  I/O4                         passive        P0_ID_C
 J2  PWR RIGHT  [fera:XT30PW-F]
        1  MINUS                        passive        GND
        2  PLUS                         passive        VBAT
 J6  SIG RIGHT  [Connector_Generic:Conn_02x04_Odd_Even]
-       1  Pin_1                        passive        P1_S1
-       2  Pin_2                        passive        5V
-       3  Pin_3                        passive        P1_S2
+       1  Pin_1                        passive        P1_S1_C
+       2  Pin_2                        passive        3V3P
+       3  Pin_3                        passive        P1_S2_C
        4  Pin_4                        passive        GND
-       5  Pin_5                        passive        P1_S3
-       6  Pin_6                        passive        3V3
-       7  Pin_7                        passive        P1_ID
-       8  Pin_8                        passive        ESC_TELEM
+       5  Pin_5                        passive        P1_S3_C
+       6  Pin_6                        passive        P1_TELEM_C
+       7  Pin_7                        passive        P1_ID_C
+       8  Pin_8                        passive        P1_5V
+U10  TPS2069CDBV  [Power_Management:TPS2069CDBV]
+       1  OUT                          power_out      P1_5V
+       2  GND                          power_in       GND
+       3  ~{FLT}                       open_collector P1_FLT
+       4  EN                           input          P1_EN
+       5  IN                           power_in       5V
+U14  USBLC6-4SC6  [Power_Protection:USBLC6-4SC6]
+       1  I/O1                         passive        P1_S1_C
+       2  GND                          passive        GND
+       3  I/O2                         passive        P1_S2_C
+       4  I/O3                         passive        P1_S3_C
+       5  VBUS                         passive        3V3
+       6  I/O4                         passive        P1_ID_C
 J3  PWR BACK  [fera:XT30PW-F]
        1  MINUS                        passive        GND
        2  PLUS                         passive        VBAT
 J7  SIG BACK  [Connector_Generic:Conn_02x04_Odd_Even]
-       1  Pin_1                        passive        P2_S1
-       2  Pin_2                        passive        5V
-       3  Pin_3                        passive        P2_S2
+       1  Pin_1                        passive        P2_S1_C
+       2  Pin_2                        passive        3V3P
+       3  Pin_3                        passive        P2_S2_C
        4  Pin_4                        passive        GND
-       5  Pin_5                        passive        P2_S3
-       6  Pin_6                        passive        3V3
-       7  Pin_7                        passive        P2_ID
-       8  Pin_8                        passive        ESC_TELEM
+       5  Pin_5                        passive        P2_S3_C
+       6  Pin_6                        passive        P2_TELEM_C
+       7  Pin_7                        passive        P2_ID_C
+       8  Pin_8                        passive        P2_5V
+U11  TPS2069CDBV  [Power_Management:TPS2069CDBV]
+       1  OUT                          power_out      P2_5V
+       2  GND                          power_in       GND
+       3  ~{FLT}                       open_collector P2_FLT
+       4  EN                           input          P2_EN
+       5  IN                           power_in       5V
+U15  USBLC6-4SC6  [Power_Protection:USBLC6-4SC6]
+       1  I/O1                         passive        P2_S1_C
+       2  GND                          passive        GND
+       3  I/O2                         passive        P2_S2_C
+       4  I/O3                         passive        P2_S3_C
+       5  VBUS                         passive        3V3
+       6  I/O4                         passive        P2_ID_C
 J4  PWR LEFT  [fera:XT30PW-F]
        1  MINUS                        passive        GND
        2  PLUS                         passive        VBAT
 J8  SIG LEFT  [Connector_Generic:Conn_02x04_Odd_Even]
-       1  Pin_1                        passive        P3_S1
-       2  Pin_2                        passive        5V
-       3  Pin_3                        passive        P3_S2
+       1  Pin_1                        passive        P3_S1_C
+       2  Pin_2                        passive        3V3P
+       3  Pin_3                        passive        P3_S2_C
        4  Pin_4                        passive        GND
-       5  Pin_5                        passive        P3_S3
-       6  Pin_6                        passive        3V3
-       7  Pin_7                        passive        P3_ID
-       8  Pin_8                        passive        ESC_TELEM
+       5  Pin_5                        passive        P3_S3_C
+       6  Pin_6                        passive        P3_TELEM_C
+       7  Pin_7                        passive        P3_ID_C
+       8  Pin_8                        passive        P3_5V
+U12  TPS2069CDBV  [Power_Management:TPS2069CDBV]
+       1  OUT                          power_out      P3_5V
+       2  GND                          power_in       GND
+       3  ~{FLT}                       open_collector P3_FLT
+       4  EN                           input          P3_EN
+       5  IN                           power_in       5V
+U16  USBLC6-4SC6  [Power_Protection:USBLC6-4SC6]
+       1  I/O1                         passive        P3_S1_C
+       2  GND                          passive        GND
+       3  I/O2                         passive        P3_S2_C
+       4  I/O3                         passive        P3_S3_C
+       5  VBUS                         passive        3V3
+       6  I/O4                         passive        P3_ID_C

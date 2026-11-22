@@ -6,40 +6,40 @@
    "watts": {
     "B": 0.038,
     "F": 1.292,
-    "In3.Cu": 2.051,
+    "In3.Cu": 2.103,
     "shunt": 0.72,
     "via": 0.294
    },
-   "watts_total": 4.395,
+   "watts_total": 4.447,
    "drop_mV": {
-    "J1": 76.21,
-    "J2": 76.14,
-    "J3": 70.61,
-    "J4": 70.07
+    "J1": 77.05,
+    "J2": 77.13,
+    "J3": 71.79,
+    "J4": 70.55
    },
    "via_field": {
     "vias": 20,
-    "max_amps": 8.93,
+    "max_amps": 8.94,
     "mean_amps": 3.0
    },
-   "peak_A_per_mm2": 738.0
+   "peak_A_per_mm2": 737.9
   },
   "minus": {
    "watts": {
-    "In1.Cu": 1.634
+    "In1.Cu": 1.666
    },
-   "watts_total": 1.634,
+   "watts_total": 1.666,
    "drop_mV": {
-    "J1": 29.66,
-    "J2": 30.89,
-    "J3": 27.29,
-    "J4": 21.13
+    "J1": 30.31,
+    "J2": 31.52,
+    "J3": 28.01,
+    "J4": 21.23
    },
-   "peak_A_per_mm2": 202.4
+   "peak_A_per_mm2": 203.4
   },
   "connector_contacts_W": 1.44,
-  "board_copper_and_shunt_W": 6.03,
-  "worst_port_loop_mohm": 7.135
+  "board_copper_and_shunt_W": 6.11,
+  "worst_port_loop_mohm": 7.243
  },
  "burst": {
   "amps_per_port": 30.0,
@@ -48,39 +48,39 @@
    "watts": {
     "B": 0.153,
     "F": 5.17,
-    "In3.Cu": 8.202,
+    "In3.Cu": 8.412,
     "shunt": 2.88,
     "via": 1.174
    },
-   "watts_total": 17.579,
+   "watts_total": 17.789,
    "drop_mV": {
-    "J1": 152.41,
-    "J2": 152.28,
-    "J3": 141.23,
-    "J4": 140.13
+    "J1": 154.11,
+    "J2": 154.26,
+    "J3": 143.58,
+    "J4": 141.09
    },
    "via_field": {
     "vias": 20,
     "max_amps": 17.87,
     "mean_amps": 6.0
    },
-   "peak_A_per_mm2": 1476.1
+   "peak_A_per_mm2": 1475.7
   },
   "minus": {
    "watts": {
-    "In1.Cu": 6.538
+    "In1.Cu": 6.664
    },
-   "watts_total": 6.538,
+   "watts_total": 6.664,
    "drop_mV": {
-    "J1": 59.32,
-    "J2": 61.78,
-    "J3": 54.58,
-    "J4": 42.26
+    "J1": 60.62,
+    "J2": 63.04,
+    "J3": 56.02,
+    "J4": 42.47
    },
-   "peak_A_per_mm2": 404.9
+   "peak_A_per_mm2": 406.9
   },
   "connector_contacts_W": 5.76,
-  "board_copper_and_shunt_W": 24.12,
-  "worst_port_loop_mohm": 7.135
+  "board_copper_and_shunt_W": 24.45,
+  "worst_port_loop_mohm": 7.243
  }
 }

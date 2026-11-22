@@ -34,7 +34,7 @@ CLI = r"C:\Program Files\KiCad\8.0\bin\kicad-cli.exe"
 REV = "A (preliminary)"
 G = 2.54                       # schematic grid
 STUB = 2.54                    # wire length between a pin and its label
-POWER_NETS = ["GND", "3V3", "5V", "VSYS", "VBAT", "3V3S", "3V3A"]
+POWER_NETS = ["GND", "3V3", "5V", "VSYS", "VBAT", "3V3S", "3V3A", "3V3P"]
 # Nets fed through an inductor, shunt, bead or connector: ERC needs to be told they are driven.
 FLAG_NETS = ["GND", "VBAT_IN", "VBAT", "5V", "VSYS", "3V3", "3V3A", "USB_VBUS"]
 
@@ -43,7 +43,10 @@ SYMBOLS = {
     "U1": "MCU_ST_STM32H7:STM32H743VITx", "U2": "fera:ICM-42688-P", "U3": "fera:DPS368",
     "U4": "Sensor_Energy:INA226", "U5": "Regulator_Switching:LMR33630ADDA",
     "U6": "Regulator_Switching:TLV62569DBV", "U7": "Regulator_Linear:LP5907MFX-3.3",
-    "U8": "Power_Protection:USBLC6-2SC6", "Y1": "Device:Crystal_GND24", "R6": "Device:R_Shunt",
+    "U8": "Power_Protection:USBLC6-2SC6",
+    **{f"U{i}": "Power_Management:TPS2069CDBV" for i in (9, 10, 11, 12)},
+    **{f"U{i}": "Power_Protection:USBLC6-4SC6" for i in (13, 14, 15, 16)},
+    "U17": "Regulator_Linear:LP5907MFX-3.3", "Y1": "Device:Crystal_GND24", "R6": "Device:R_Shunt",
     "FB1": "Device:FerriteBead", "C20": "Device:C_Polarized", "D1": "Device:D_Schottky",
     "D5": "Device:D_Zener", "D6": "Device:D_Schottky", "D7": "Device:D_Zener",
     "C31": "Device:C_Polarized", "SW1": "Switch:SW_Push",
@@ -58,7 +61,7 @@ SYMBOLS = {
     **{f"J{i}": "fera:XT30PW-F" for i in (1, 2, 3, 4)},
     **{f"J{i}": "Connector_Generic:Conn_02x04_Odd_Even" for i in (5, 6, 7, 8)},
 }
-BY_PREFIX = {"C": "Device:C", "R": "Device:R", "L": "Device:L", "D": "Device:LED",
+BY_PREFIX = {"C": "Device:C", "R": "Device:R", "RN": "Device:R_Pack04", "L": "Device:L", "D": "Device:LED",
              "TP": "Connector:TestPoint", "H": "Mechanical:MountingHole_Pad"}
 LEADERS = ("U", "J", "Y", "SW")           # parts that start a new block on the page
 
@@ -77,7 +80,10 @@ NOTES = {
           "J13 is a Tag-Connect TC2030 SWD footprint (no part fitted).",
     "ports": "Four identical FERA ports. XT30PW-F polarity per the Amass drawing: pad 1 = minus, pad 2 = plus\n"
              "(plus is the contact at the flat end of the housing). Rated 15 A continuous, 30 A momentary.\n"
-             "Signal header pin order is a routing placeholder; the logical order is in docs/port-spec.md.",
+             "Signal header pin order is a routing placeholder; the logical order is in docs/port-spec.md.\n"
+             "Per port: TPS2069C switch (1.5 A, enable + fault to the MCU) for the module's 5 V, 100 ohm in series\n"
+             "with S1-S3 and ID, 1 k in the shared telemetry line, USBLC6-4 clamp on the contact side.\n"
+             "Port 3.3 V comes from its own current-limited LDO (3V3P, sensors page).",
 }
 
 # --------------------------------------------------------------------------- s-expressions
@@ -629,6 +635,7 @@ def generate():
 SUSPECT = [  # (pin-name pattern, the net must match this pattern)
     (r"^(GND|VSS|VSSA|PGND|AGND|EP|MINUS|SHIELD|SHLD)$", r"^GND$"),
     (r"^(VDD|VDDIO|VDDA|VREF\+|VBAT|VS|VIN|IN|PLUS|VBUS|VCC)$", r"^(3V3|3V3A|3V3S|5V|VSYS|VBAT|USB_VBUS|BUCK_VCC)$"),
+    (r"^OUT$", r"^(P\d_5V|3V3S|3V3P)$"),
 ]
 
 

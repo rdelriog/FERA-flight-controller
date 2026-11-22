@@ -27,17 +27,19 @@ suggestions. The error and most warnings are fixed below; the open ones are list
 | F17 (part) | PX4's INA226 driver defaults to a different address | Noted on U4: start the driver with `-a 0x40` |
 | F18 (part) | No capacitor on the 5 V sense ADC input | C32 100 nF on V5_SENSE |
 | F19 (part) | No capacitor on VBUS at the connector | C33 1 µF on USB_VBUS |
+| F4 | 5 V and 3V3 went to the port contacts with no current limit | Each port's 5 V now goes through its own TPS2069C (U9–U12: 1.5 A rated, limit 1.7–2.5 A, enable and fault to the MCU, off in reset through a 10 k pull-down; TI SLVSAU6). Port 3.3 V comes from its own current-limited LP5907 (U17, rail 3V3P), so a module fault cannot pull down the MCU's 3V3 |
+| F10 (part) | One bad module could hold the shared ESC_TELEM line | 1 kΩ per port between the contact and the shared line (R25–R28) |
+| F11 | Port signals went from MCU pins straight to the contacts | 100 Ω in series with S1–S3 and ID (RN1–RN4) and a USBLC6-4 clamp to 3V3/GND on the contact side (U13–U16). The clamp's supply pin is on 3V3, not on the switched 5 V, so signals cannot back-power a module whose switch is off |
+| F14 (part) | No bulk capacitor at the microSD socket | C46 4.7 µF beside C28 |
 
 ## Still open
 
 | # | Finding | Why it is open |
 |---|---|---|
-| F3 | The 5 V buck is 3 A, but `docs/port-spec.md` allowed 1.5 A of 5 V per port (6 A). A servo stall still browns out the 5 V port rail | Needs a decision: a second regulator for the servo rail, a BEC in each module, or a lower figure in the spec. The spec now states the 3 A total |
-| F4 | 5 V and 3V3 go to the port contacts with no current limit; a shorted module or a pin touching during insertion lands on the MCU's own 3V3 | Needs a load switch per port (planned, PE15) and a current-limited 3V3 feed; not placed yet |
+| F3 | The 5 V buck is 3 A, but `docs/port-spec.md` allowed 1.5 A of 5 V per port (6 A). The per-port switches now stop one module from taking the whole rail, but four servo modules together can still exceed 3 A. A servo stall still browns out the 5 V port rail | Needs a decision: a second regulator for the servo rail, a BEC in each module, or a lower figure in the spec. The spec now states the 3 A total |
 | F9 | No reverse-polarity protection; the SMBJ18A is small for regenerative dumps from four ESCs | Known gap; an ideal-diode stage and a larger TVS do not fit the battery corner as laid out |
-| F10 | ESC_TELEM is one net across four ports: one bad module kills telemetry from all | Needs the deferred 4:1 mux or a series resistor per port |
-| F11 | Port signals go from MCU pins straight to the contacts: no series resistors, no ESD parts | Known gap |
-| F14 | No pull-ups on the microSD lines, no bulk capacitor at the socket | PX4/NuttX enables the MCU's internal pull-ups on the SDMMC pins (to be confirmed in the board port); external 47 k and a 10 µF are not fitted |
+| F10 (rest) | Telemetry from all four ports still shares one UART | Each port now has its own 1 kΩ, so a shorted module no longer kills the line; a mux would still be needed to tell ports apart without ESC IDs |
+| F14 | No external pull-ups on the microSD lines | PX4/NuttX enables the MCU's internal pull-ups on the SDMMC pins (to be confirmed in the board port). The bulk capacitor is now fitted (C46) |
 | F17 | Optional INA226 input filter | Not fitted |
 | F18 | VBAT pin has no capacitor of its own; IMU chip-select has no pull-up; the latch inputs have no RC filter | Not fitted; debounce the latch inputs in software |
 | F19 | USB shield tied straight to ground; no VBUS TVS | Accepted for rev A |

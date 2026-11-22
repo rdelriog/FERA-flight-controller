@@ -41,8 +41,22 @@ MOUNT_HOLES = [(21.5, -39.5), (21.5, 39.5), (-21.5, 39.5), (-21.5, -39.5)]
 # ---------------------------------------------------------------------------
 # Stack-up and rules
 # ---------------------------------------------------------------------------
-# 6 layers: F signal / GND / 3V3 / VBAT / 5V / B signal (GND is also poured on F and B)
+# 6 layers: F signal / GND / 3V3 fill + slow signals / VBAT / 5V / B signal
+# (GND is also poured on F and B)
 PLANES = {"GND": ["In1.Cu"], "3V3": ["In2.Cu"], "VBAT": ["In3.Cu"], "5V": ["In4.Cu"]}
+
+# Layers the router may put tracks on. In2 is the 3V3 fill: slow nets may cross it, the fill
+# closes around them. It is 2 oz copper, so its tracks and gaps are 0.2 mm.
+ROUTE_LAYERS = ["F", "B", "In2.Cu"]
+LAYER_RULES = {"In2.Cu": dict(track=0.2, clearance=0.2)}
+# Nets that stay on the outer layers, each directly over a solid plane: the fast buses, the
+# crystal, the switching nodes and the current-sense pair.
+OUTER_ONLY = ("USB_", "SD_", "IMU_", "OSC_", "BUCK_", "ISNS_", "V3_")
+
+
+def inner_ok(net):
+    return not net.startswith(OUTER_ONLY)
+
 
 # Copper thickness in mm per layer and the dielectric between layers (top to bottom).
 # Inner layers are 2 oz because In1 (GND) and In3 (VBAT) carry the motor current.
@@ -61,7 +75,8 @@ BIG_VIA = (1.3, 0.8)                 # the ones right against the shunt pad
 WIDTHS = {          # track width per net (default TRACK)
     "5V": 0.4, "VSYS": 0.4, "BUCK_SW": 0.6, "V3_SW": 0.5, "USB_VBUS": 0.4,
     "3V3S": 0.25, "3V3A": 0.25, "VCAP1": 0.25, "VCAP2": 0.25, "BUCK_BOOT": 0.2, "BUCK_VCC": 0.2,
-    "GND": 0.25, "3V3": 0.25, "VBAT": 0.4, "VBAT_IN": 0.4,
+    "GND": 0.25, "3V3": 0.25, "VBAT": 0.4, "VBAT_IN": 0.4, "3V3P": 0.25,
+    **{f"P{p}_5V": 0.4 for p in range(4)},
 }
 
 # KiCad net classes written into the project file (name -> settings and member nets).
@@ -70,7 +85,7 @@ NETCLASSES = {
     "USB": dict(track=0.15, clearance=0.15, dp_width=0.15, dp_gap=0.15,
                 nets=["USB_D_P", "USB_D_N", "USB_CONN_D_P", "USB_CONN_D_N"]),
     "Power": dict(track=0.4, clearance=0.15, nets=["VBAT", "VBAT_IN", "5V", "VSYS", "BUCK_SW", "V3_SW",
-                                                    "USB_VBUS"]),
+                                                    "USB_VBUS", "P0_5V", "P1_5V", "P2_5V", "P3_5V"]),
     "Sense": dict(track=0.15, clearance=0.15, dp_width=0.15, dp_gap=0.15,
                   nets=["ISNS_P", "ISNS_N"]),
 }
@@ -82,9 +97,13 @@ PRE_ROUTE = ["OSC_IN", "OSC_OUT", "BUCK_SW", "BUCK_BOOT", "BUCK_VCC", "BUCK_FB",
 
 # Nets the router should place before the rest: ones whose pads are easy to wall in
 # (connector end pins) or that cross the whole board.
-ROUTE_FIRST = ["USB_D_P", "USB_D_N", "VSYS", "P0_S2", "P1_S2", "P2_S2", "P3_S2", "P0_S3", "P1_S3", "IMU_SCK", "IMU_CS", "IMU_MISO", "IMU_MOSI", "IMU_DRDY",
-               "ESC_TELEM", "NRST", "SWCLK", "SWDIO", "SWO", "SAFETY_BTN", "SD_CK", "SD_CMD", "SD_D0", "SD_D1", "SD_D2",
-               "SD_D3"]
+ROUTE_FIRST = ["USB_D_P", "USB_D_N", "SD_CK", "SD_CMD", "SD_D0", "SD_D1", "SD_D2", "SD_D3",
+               "IMU_SCK", "IMU_CS", "IMU_MISO", "IMU_MOSI", "IMU_DRDY",
+               *[f"P{p}_{s}" for p in (1, 0, 2, 3) for s in ("S3", "S2", "S1", "ID")],
+               *[f"P{p}_5V" for p in range(4)],
+               *[f"P{p}_{s}_C" for p in range(4) for s in ("S1", "S2", "S3", "ID", "TELEM")],
+               "VSYS",
+               "ESC_TELEM", "NRST", "SWCLK", "SWDIO", "SWO", "SAFETY_BTN"]
 
 # Top-layer areas other nets must stay out of once the PRE_ROUTE nets are in (x1, y1, x2, y2).
 GUARDS = [(-13.9, -3.9, -10.0, 3.3)]        # crystal and its load capacitors
@@ -179,6 +198,10 @@ MCU_NETS = {
     "PC6": "P0_S3", "PC7": "P1_S3", "PB0": "P2_S3", "PB1": "P3_S3",
     "PB5": "P0_ID", "PA10": "P1_ID", "PB2": "P2_ID", "PC1": "P3_ID",
     "PD3": "LATCH0", "PD4": "LATCH1", "PD7": "LATCH2", "PD10": "LATCH3",
+    # port 5 V switches: enable (high = on) and fault (low = overcurrent), each on the MCU
+    # edge that faces its port
+    "PE1": "P0_EN", "PB12": "P1_EN", "PE12": "P2_EN", "PA2": "P3_EN",
+    "PB4": "P0_FLT", "PD11": "P1_FLT", "PE10": "P2_FLT", "PA1": "P3_FLT",
     "PE0": "ESC_TELEM",
     # IMU on SPI4: these five pins are the MCU corner next to the sensor
     "PE2": "IMU_SCK", "PE5": "IMU_MISO", "PE6": "IMU_MOSI", "PE3": "IMU_CS", "PE4": "IMU_DRDY",
@@ -268,18 +291,25 @@ cap("C29", "2u2", -15.2, -4.8, "3V3S", rot=180)              # VDD bulk (datashe
 cap("C15", "10n", -15.1, -7.6, "3V3S", rot=270)              # VDDIO, pin 5 (datasheet: 10 nF)
 # DPS310 pin-out (Infineon): 1 GND, 2 CSB, 3 SDI/SDA, 4 SCK/SCL, 5 SDO, 6 VDDIO, 7 GND, 8 VDD.
 # CSB high selects I2C; SDO low selects address 0x76.
-part("U3", "Package_LGA:Bosch_LGA-8_2x2.5mm_P0.65mm_ClockwisePinNumbering", "DPS368", -21.8, -12.6,
+part("U3", "Package_LGA:Bosch_LGA-8_2x2.5mm_P0.65mm_ClockwisePinNumbering", "DPS368", -25.5, -28.0,
      nets={"1": "GND", "2": "3V3S", "3": "I2C2_SDA", "4": "I2C2_SCL", "5": "GND",
            "6": "3V3S", "7": "GND", "8": "3V3S"},
      note="DPS310 is discontinued; DPS368 is the pin- and register-compatible successor. "
           "I2C address 0x76. Check the land pattern against the Infineon drawing.")
-cap("C16", "100n", -21.8, -14.9, "3V3S")
-res("R4", "2k2", -25.4, -12.2, "3V3", "I2C2_SDA")
-res("R5", "2k2", -25.4, -13.6, "3V3", "I2C2_SCL")
+cap("C16", "100n", -25.5, -30.3, "3V3S")
+res("R4", "2k2", -28.6, -27.5, "3V3", "I2C2_SDA")
+res("R5", "2k2", -28.6, -28.9, "3V3", "I2C2_SCL")
 part("U7", "Package_TO_SOT_SMD:SOT-23-5", "LP5907MFX-3.3", -21.0, -20.6,
      nets={"1": "VSYS", "2": "GND", "3": "VSYS", "5": "3V3S"})
 cap("C17", "2u2", -21.0, -23.6, "VSYS")                      # > 0.7 uF effective after DC bias
 cap("C18", "2u2", -24.6, -20.6, "3V3S", rot=90)
+# 3V3P: the 3.3 V that goes out to the port contacts has its own current-limited regulator,
+# so a shorted module or a contact touching during insertion cannot pull down the MCU's 3V3.
+part("U17", "Package_TO_SOT_SMD:SOT-23-5", "LP5907MFX-3.3", -20.6, -27.2,
+     nets={"1": "VSYS", "2": "GND", "3": "VSYS", "5": "3V3P"},
+     note="Port 3.3 V: 250 mA, current-limited. Separate from the MCU and sensor rails.")
+cap("C44", "2u2", -20.6, -30.2, "VSYS")
+cap("C45", "2u2", -17.9, -27.2, "3V3P", rot=90)
 
 # ---------------------------------------------------------------------------
 # Battery input, current sense, 5 V buck (back-left lobe)
@@ -344,6 +374,7 @@ part("J11", "Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5", "microSD", 26.2, 
      nets={"1": "SD_D2", "2": "SD_D3", "3": "SD_CMD", "4": "3V3", "5": "SD_CK", "6": "GND",
            "7": "SD_D0", "8": "SD_D1", "9": "GND", "10": "SD_DET", "11": "GND"})
 cap("C28", "100n", 15.8, 22.0, "3V3", rot=90)
+cap("C46", "4u7", 14.2, 22.0, "3V3", rot=90, fp=C0603)        # bulk at the card socket
 
 # ---------------------------------------------------------------------------
 # USB-C on the tongue, SWD, UI (front-right lobe)
@@ -427,17 +458,44 @@ for p in range(4):
     x, y = rotate(4.3, -25.23, a)
     part(f"J{p + 5}", "Connector_PinHeader_1.27mm:PinHeader_2x04_P1.27mm_Horizontal",
          f"SIG {PORT_NAME[p]}", x, y, a + 90,
-         nets={"1": f"P{p}_S1", "3": f"P{p}_S2", "5": f"P{p}_S3", "7": f"P{p}_ID",
-               "2": "5V", "4": "GND", "6": "3V3", "8": "ESC_TELEM"},
-         note="Placeholder for the 8-way pogo block. Pin order here is chosen for routing "
-              "(plane nets on the outer row), not the logical order in docs/port-spec.md.")
-    x, y = rotate(6.2, -21.6, a)
+         nets={"1": f"P{p}_S1_C", "3": f"P{p}_S2_C", "5": f"P{p}_S3_C", "7": f"P{p}_ID_C",
+               "2": "3V3P", "4": "GND", "6": f"P{p}_TELEM_C", "8": f"P{p}_5V"},
+         note="Placeholder for the 8-way pogo block. Pin order here is chosen for routing, "
+              "not the logical order in docs/port-spec.md.")
+    x, y = rotate(6.2, -19.5, a)
     res(f"R{19 + p}", "2k2", x, y, "3V3", f"P{p}_ID", rot=a)
+    # --- port protection -------------------------------------------------------------
+    # 5 V to the module through its own current-limited switch (TI SLVSAU6: 1.5 A rated,
+    # limit 1.7 to 2.5 A, enable active high, FLT open drain and low on overcurrent or
+    # overtemperature). Off until the firmware has read the module's ID.
+    x, y = rotate(13.5, -25.9, a)
+    part(f"U{9 + p}", "Package_TO_SOT_SMD:SOT-23-5", "TPS2069CDBV", x, y, a,
+         nets={"1": f"P{p}_5V", "2": "GND", "3": f"P{p}_FLT", "4": f"P{p}_EN", "5": "5V"},
+         note="Pin-out per TI SLVSAU6 table 5-2: 1 OUT, 2 GND, 3 FLT, 4 EN, 5 IN.")
+    x, y = rotate(10.4, -25.9, a)
+    cap(f"C{36 + p}", "10u 16V", x, y, f"P{p}_5V", rot=a + 90, fp=C0805)
+    x, y = rotate(13.5, -25.9, a)
+    cap(f"C{40 + p}", "100n", x, y, "5V", rot=a + 90, side="B")   # under the switch's IN pin
+    x, y = rotate(15.3, -23.3, a)
+    res(f"R{29 + p}", "10k", x, y, f"P{p}_EN", "GND", rot=a)     # off while the MCU is in reset
+    # 100 ohm in series with S1, S2, S3 and ID, 1 k in the telemetry line (which joins the
+    # other ports behind it), and a diode array to 3V3 and GND on the contact side.
+    x, y = rotate(6.2, -22.95, a)
+    part(f"RN{p + 1}", "Resistor_SMD:R_Array_Convex_4x0402", "100R x4", x, y, a + 90,
+         nets={"8": f"P{p}_S1_C", "7": f"P{p}_S2_C", "6": f"P{p}_S3_C", "5": f"P{p}_ID_C",
+               "1": f"P{p}_S1", "2": f"P{p}_S2", "3": f"P{p}_S3", "4": f"P{p}_ID"})
+    x, y = rotate(10.2, -23.3, a)
+    res(f"R{25 + p}", "1k", x, y, f"P{p}_TELEM_C", "ESC_TELEM", rot=a)
+    x, y = rotate(6.2, -21.9, a)
+    part(f"U{13 + p}", "Package_TO_SOT_SMD:SOT-23-6", "USBLC6-4SC6", x, y, a, "B",
+         nets={"1": f"P{p}_S1_C", "3": f"P{p}_S2_C", "4": f"P{p}_S3_C", "6": f"P{p}_ID_C",
+               "2": "GND", "5": "3V3"},
+         note="Clamps the contact side of S1-S3 and ID to 3V3 and GND. Its supply pin is on 3V3, "
+              "not on the port's 5 V, so signals cannot back-power a switched-off module rail.")
 
 section("io")
 for i, (x, y) in enumerate(MOUNT_HOLES):
     part(f"H{i + 1}", "MountingHole:MountingHole_3.2mm_M3_Pad", "M3", x, y, bom=False)
 
-# Not on this preliminary board (see pinmap.md): second IMU, FRAM, CAN,
-# ESC-telemetry mux, port 5 V load switch, buzzer driver, RGB LED driver,
-# series/ESD protection on the port signals, reverse-polarity protection.
+# Not on this board (see pinmap.md): second IMU, FRAM, CAN, ESC-telemetry mux,
+# buzzer driver, RGB LED driver, reverse-polarity protection.
