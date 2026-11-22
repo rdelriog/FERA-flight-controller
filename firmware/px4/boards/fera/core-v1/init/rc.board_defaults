@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# FERA Core specific board defaults
+#------------------------------------------------------------------------------
+
+# Battery voltage and current from the INA226 (0.2 mOhm shunt R6), 4S pack
+param set-default BAT1_SOURCE 0
+param set-default BAT1_N_CELLS 4
+param set-default INA226_SHUNT 0.0002
+param set-default INA226_CURRENT 200.0
+
+# TELEM1 (/dev/ttyS1): ESP32 Wi-Fi MAVLink bridge
+param set-default MAV_0_CONFIG 101
+param set-default MAV_0_RATE 0
+param set-default SER_TEL1_BAUD 921600
+
+# RC: CRSF / ELRS on USART3 (/dev/ttyS2) is read by rc_input through RC_SERIAL_PORT
+
+# ESC telemetry from all four ports arrives on UART8 RX (/dev/ttyS4 = EXT2)
+param set-default DSHOT_TEL_CFG 401
+
+# The safety button on PA15 is active low; PX4's safety_button driver is not built for rev A.
+
+# Ports: S1 = ESC (DShot), S2 / S3 = servos (PWM). Output n of each role is port n-1.

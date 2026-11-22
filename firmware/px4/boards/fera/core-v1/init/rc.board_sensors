@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# FERA Core board sensors init
+#------------------------------------------------------------------------------
+
+board_adc start
+
+# Internal SPI4: ICM-42688-P. Rotation still to be confirmed on the first board (-R 0 = none).
+icm42688p -s -b 4 -R 0 start
+
+# Internal I2C2: DPS368 barometer (DPS310-compatible driver), address 0x76
+dps310 -I -b 2 -a 118 start
+
+# Internal I2C2: INA226 battery monitor, address 0x40, battery 1
+ina226 -I -b 2 -a 64 -t 1 -k start
