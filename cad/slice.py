@@ -47,6 +47,14 @@ LOAD = dict(infill_sparse_density=50)              # plugs, caps, motor mounts, 
 # 20 mm/s (outer walls stay at the tuned 30 mm/s)
 SHELL = dict(infill_sparse_density=30, speed_wall_x=40, speed_topbottom=30, speed_infill=60)
 BRIDGES = dict(bridge_settings_enabled=True)       # socket roofs are printed as bridges
+# Fast profile (the *_fast.gcode files, next to the standard ones): 0.28 mm layers, 25 % infill
+# laid every second layer, faster inner walls / infill / skins. Walls and top/bottom layers stay
+# as each part has them; the outer wall only goes from 30 to 35 mm/s. Not used for the arms
+# (motor loads). The socket fit was chosen at 0.2 mm: check 0_fit_gauge_fast before the hub base.
+FAST = dict(layer_height=0.28, infill_sparse_density=25, infill_sparse_thickness=0.56,
+            speed_print=60, speed_infill=80, speed_wall_0=35, speed_wall_x=50,
+            speed_topbottom=40, speed_travel=150)
+FAST_PARTS = ("0_fit_gauge", "3_cap", "5_hub_base", "6_hub_lid", "7_battery_cover", "9_latch_knob_x4")
 
 # rotations: rows of the matrix that maps model coordinates to print coordinates
 AS_MODELLED = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
@@ -115,6 +123,12 @@ PARTS = {
     "boat_thruster_mount": ("thruster_mount", MINUS_Y_DOWN, 1, LOAD, None,
                             "Lying on the flush side, no support."),
 }
+for _name in FAST_PARTS:
+    _stl, _rot, _n, _extra, _bore, _note = PARTS[_name]
+    _fast = {**_extra, **FAST}
+    if "infill_sparse_density" in _extra and _extra["infill_sparse_density"] < FAST["infill_sparse_density"]:
+        _fast["infill_sparse_density"] = _extra["infill_sparse_density"]    # never more infill
+    PARTS[_name + "_fast"] = (_stl, _rot, _n, _fast, _bore, _note + " Fast profile (0.28 mm layers).")
 
 
 def flatten(node, out):
